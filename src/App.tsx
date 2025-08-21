@@ -1,4 +1,3 @@
-import React from 'react';
 import Board from './components/Board';
 import WordInput from './components/WordInput';
 import HUD from './components/HUD';
