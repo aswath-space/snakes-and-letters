@@ -12,4 +12,5 @@ export interface Rules {
   allowWildcards: boolean;
   challengeMode: boolean;
   noRepeats: boolean;
+  timer: boolean;
 }

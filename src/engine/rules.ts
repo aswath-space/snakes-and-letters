@@ -19,4 +19,5 @@ export const defaultRules: Rules = {
   allowWildcards: true,
   challengeMode: false,
   noRepeats: false,
+  timer: false,
 };
