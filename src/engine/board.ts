@@ -23,9 +23,12 @@ export function resolveSnakesAndLadders(
   rules: Rules
 ): CellIndex {
   let current = index;
-  let last = current;
   const visited = new Set<CellIndex>();
-  while (!visited.has(current)) {
+  let last = current;
+  while (true) {
+    if (visited.has(current)) {
+      return Math.min(current, last);
+    }
     visited.add(current);
     const snake = rules.snakes.find((s) => s.from === current);
     if (snake) {
@@ -39,10 +42,6 @@ export function resolveSnakesAndLadders(
       current = ladder.to;
       continue;
     }
-    break;
+    return current;
   }
-  if (visited.has(current)) {
-    return Math.min(current, last);
-  }
-  return current;
 }

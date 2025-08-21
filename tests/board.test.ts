@@ -7,6 +7,11 @@ describe('board mapping', () => {
     expect(indexToPosition(9, 100)).toEqual({ row: 0, col: 9 });
     expect(indexToPosition(10, 100)).toEqual({ row: 1, col: 9 });
     expect(indexToPosition(19, 100)).toEqual({ row: 1, col: 0 });
+    expect(indexToPosition(20, 100)).toEqual({ row: 2, col: 0 });
+    expect(indexToPosition(29, 100)).toEqual({ row: 2, col: 9 });
+    expect(indexToPosition(30, 100)).toEqual({ row: 3, col: 9 });
+    expect(indexToPosition(39, 100)).toEqual({ row: 3, col: 0 });
+    expect(indexToPosition(99, 100)).toEqual({ row: 9, col: 0 });
   });
 
   it('clamps index', () => {

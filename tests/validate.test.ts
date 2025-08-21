@@ -52,6 +52,18 @@ describe('validateWord', () => {
     expect(res2.accepted).toBe(true);
   });
 
+  it('rejects words missing from dictionary', () => {
+    const res = validateWord('zzzzz', {
+      length: 5,
+      startLetter: 'z',
+      usedWords: new Set(),
+      dictionary: dict,
+      noRepeats: false,
+    });
+    expect(res.accepted).toBe(false);
+    expect(res.reason).toBe('dictionary');
+  });
+
   it('rejects repeat when noRepeats', () => {
     const used = new Set(['apple']);
     const res = validateWord('apple', {
