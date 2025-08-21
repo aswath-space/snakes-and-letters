@@ -20,3 +20,7 @@ pnpm build     # production build
 - Landing on a snake or ladder moves you immediately.
 
 This project is an MVP scaffold; engine logic is unit tested and the UI is minimal yet functional.
+
+## Shoutouts and Gratitude
+
+- The list of words has been sourced from DWYL's repo [here](https://github.com/dwyl/english-words)
