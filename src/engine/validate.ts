@@ -1,4 +1,4 @@
-import { Dictionary } from '../dictionary/loader';
+import { Dictionary, hasWord } from '../dictionary/loader';
 
 export function normalize(word: string): string {
   return word.trim().toLowerCase();
@@ -26,7 +26,7 @@ export function validateWord(
       return { accepted: false, reason: 'start' };
     }
   }
-  if (!opts.dictionary.has(w)) {
+  if (!hasWord(opts.dictionary, w)) {
     return { accepted: false, reason: 'dictionary' };
   }
   if (opts.noRepeats && opts.usedWords.has(w)) {
