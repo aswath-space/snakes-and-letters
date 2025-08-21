@@ -7,7 +7,7 @@ import {
   clampIndex,
 } from '../engine';
 import { rollDie } from '../engine/dice';
-import { validateWord } from '../engine/validate';
+import { validateWord, normalize } from '../engine/validate';
 import type { Dictionary } from '../dictionary/loader';
 
 export type PlayerId = 0 | 1;
@@ -59,7 +59,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
   submitWord(word, useWildcard = false) {
     const state = get();
-    const validation = validateWord(word, {
+    const normalized = normalize(word);
+    const validation = validateWord(normalized, {
       length: state.requiredLength,
       startLetter: state.startLetter,
       usedWords: state.usedWords,
@@ -77,16 +78,16 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
       return validation;
     }
-    let position = state.positions[state.current] + word.length;
+    let position = state.positions[state.current] + normalized.length;
     position = clampIndex(position, state.rules.boardSize);
     position = resolveSnakesAndLadders(position, state.rules);
     const newUsed = new Set(state.usedWords);
-    newUsed.add(word.toLowerCase());
+    newUsed.add(normalized);
     const newWildcards = { ...state.wildcards };
     if (useWildcard) newWildcards[state.current]--;
     set({
       positions: { ...state.positions, [state.current]: position },
-      startLetter: word.at(-1)!.toLowerCase(),
+      startLetter: normalized.at(-1)!,
       usedWords: newUsed,
       wildcards: newWildcards,
     });
