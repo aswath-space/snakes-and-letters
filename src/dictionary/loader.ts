@@ -1,12 +1,15 @@
 export type Dictionary = Set<string>;
 
 export async function loadWordlist(
-  path = '/src/dictionary/english.txt'
+  path = '/dictionary/english.txt'
 ): Promise<Dictionary> {
   if (typeof process !== 'undefined' && process.versions?.node) {
     const { readFile } = await import('fs/promises');
     const { resolve } = await import('path');
-    const text = await readFile(resolve(__dirname, 'english.txt'), 'utf-8');
+    const text = await readFile(
+      resolve(__dirname, '../../public/dictionary/english.txt'),
+      'utf-8'
+    );
     return new Set(
       text
         .split(/\r?\n/)

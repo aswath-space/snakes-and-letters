@@ -8,7 +8,8 @@ interface Options {
   length: number;
   startLetter: string;
   usedWords: Set<string>;
-  dictionary: Dictionary;
+  hasWord: (word: string) => boolean;
+  canSatisfy?: (letter: string, length: number) => boolean;
   noRepeats?: boolean;
   useWildcard?: boolean;
 }
@@ -26,7 +27,7 @@ export function validateWord(
       return { accepted: false, reason: 'start' };
     }
   }
-  if (!opts.dictionary.has(w)) {
+  if (!opts.hasWord(w)) {
     return { accepted: false, reason: 'dictionary' };
   }
   if (opts.noRepeats && opts.usedWords.has(w)) {

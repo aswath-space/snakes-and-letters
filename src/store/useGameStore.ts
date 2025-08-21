@@ -7,7 +7,8 @@ import {
   clampIndex,
 } from '../engine';
 import { rollDie } from '../engine/dice';
-import { validateWord } from '../engine/validate';
+import { validateWord, canSatisfy } from '../engine/validate';
+import { hasWord } from '../dictionary/loader';
 import type { Dictionary } from '../dictionary/loader';
 
 export type PlayerId = 0 | 1;
@@ -63,7 +64,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       length: state.requiredLength,
       startLetter: state.startLetter,
       usedWords: state.usedWords,
-      dictionary: state.dictionary,
+      hasWord: (w) => hasWord(state.dictionary, w),
+      canSatisfy: (l, len) => canSatisfy(l, len, state.dictionary),
       noRepeats: state.rules.noRepeats,
       useWildcard,
     });

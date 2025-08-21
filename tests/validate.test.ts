@@ -1,8 +1,10 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { validateWord } from '../src/engine/validate';
-import { loadWordlist } from '../src/dictionary/loader';
+import { validateWord, canSatisfy } from '../src/engine/validate';
+import { loadWordlist, hasWord } from '../src/dictionary/loader';
 
 let dict: Set<string>;
+const hw = (w: string) => hasWord(dict, w);
+const cs = (l: string, len: number) => canSatisfy(l, len, dict);
 
 beforeAll(async () => {
   dict = await loadWordlist();
@@ -14,7 +16,8 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'a',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: hw,
+      canSatisfy: cs,
       noRepeats: false,
     });
     expect(res.accepted).toBe(true);
@@ -25,7 +28,8 @@ describe('validateWord', () => {
       length: 4,
       startLetter: 'a',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: hw,
+      canSatisfy: cs,
       noRepeats: false,
     });
     expect(res.accepted).toBe(false);
@@ -37,7 +41,8 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'b',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: hw,
+      canSatisfy: cs,
       noRepeats: false,
     });
     expect(res.accepted).toBe(false);
@@ -45,7 +50,8 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'b',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: hw,
+      canSatisfy: cs,
       noRepeats: false,
       useWildcard: true,
     });
@@ -58,7 +64,8 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'a',
       usedWords: used,
-      dictionary: dict,
+      hasWord: hw,
+      canSatisfy: cs,
       noRepeats: true,
     });
     expect(res.accepted).toBe(false);
