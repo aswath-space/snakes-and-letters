@@ -22,6 +22,14 @@ export default function ToggleBar() {
         />
         No Repeats
       </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={rules.timer}
+          onChange={() => setRules({ timer: !rules.timer })}
+        />
+        Timer
+      </label>
     </div>
   );
 }
