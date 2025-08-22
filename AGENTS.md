@@ -40,7 +40,9 @@ snakes-and-letters/
 ├─ public/
 │  ├─ favicon.svg
 │  ├─ manifest.webmanifest
-│  └─ icons/                      # 192/512 pngs for PWA
+│  ├─ icons/                # 196.png, 512.png (ignored in git)
+│  └─ dictionary/
+│     └─ english.txt              # simple newline word list (MVP)
 ├─ src/
 │  ├─ main.tsx
 │  ├─ app.css
@@ -54,7 +56,6 @@ snakes-and-letters/
 │  │  └─ index.ts                 # re-exports
 │  ├─ dictionary/
 │  │  ├─ loader.ts                # loadWordlist(), hasWord(), preload
-│  │  ├─ english.txt              # simple newline word list (MVP)
 │  │  └─ index.ts
 │  ├─ store/
 │  │  └─ useGameStore.ts          # Zustand store: state + actions
@@ -161,7 +162,7 @@ export interface Dictionary {
   canSatisfy?: (len: number, startsWith?: string) => boolean; // optional perf
 }
 
-export async function loadWordlist(path = '/src/dictionary/english.txt'): Promise<Dictionary>;
+export async function loadWordlist(path = '/dictionary/english.txt'): Promise<Dictionary>;
 ```
 - MVP: simple newline-delimited word list.
 - Must be case-insensitive.
@@ -216,7 +217,7 @@ Rules for actions (must implement):
 ## 9. PWA requirements
 
 - `public/manifest.webmanifest` with name, short_name, theme/background.
-- Icons: 192 & 512 PNG.
+- Icons: `favicon.svg` plus PNG icons (`/icons/196.png`, `/icons/512.png`).
 - `src/pwa/service-worker.ts` with basic asset caching (Vite plugin or Workbox ok).
 - Register SW in `main.tsx` via `registerSW.ts`.
 - Pass core Lighthouse PWA checks locally.
@@ -251,7 +252,7 @@ AGENTS.md is the single, predictable place for instructions—tools should read 
 
 ## 12. Default content (seed)
 
-- `src/dictionary/english.txt` — include ~2–5k common words (ASCII only for MVP).
+- `public/dictionary/english.txt` — include ~2–5k common words (ASCII only for MVP).
 - `rules.ts` — seed 4–6 snakes and 4–6 ladders (balanced).
 
 ## 13. Task checklist (for agents)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { validateWord } from '../engine/validate';
 import { hasWord } from '../dictionary/loader';
@@ -68,9 +68,6 @@ export default function WordInput() {
           disabled={!validation.accepted}
         >
           Submit
-        </button>
-        <button className="border px-2" onClick={endTurn}>
-          End Turn
         </button>
       </div>
       {!validation.accepted && (word.length > 0 || requiredLength > 0) && (

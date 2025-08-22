@@ -21,8 +21,9 @@ export default function Dice({ value }: DiceProps) {
       className="w-12 h-12 border rounded flex items-center justify-center text-2xl"
       onClick={roll}
       aria-label="Roll die"
+      title="Roll"
     >
-      {lastDie ? faces[lastDie - 1] : '🎲'}
+      {lastDie ? faces[lastDie - 1] : 'Roll'}
     </button>
   );
 }
