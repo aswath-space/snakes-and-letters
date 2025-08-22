@@ -1,9 +1,21 @@
-import React from 'react';
 import { useGameStore } from '../store/useGameStore';
 
-export default function Dice() {
+const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+
+interface DiceProps {
+  value?: number;
+}
+
+export default function Dice({ value }: DiceProps) {
+  if (typeof value === 'number') {
+    return (
+      <div className="w-12 h-12 border rounded flex items-center justify-center text-2xl">
+        {faces[value - 1]}
+      </div>
+    );
+  }
+
   const { lastDie, roll } = useGameStore();
-  const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
   return (
     <button
       className="w-12 h-12 border rounded flex items-center justify-center text-2xl"
