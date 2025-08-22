@@ -1,4 +1,3 @@
-import React from 'react';
 import Dice from './Dice';
 import { useGameStore } from '../store/useGameStore';
 
@@ -14,8 +13,7 @@ export default function HUD() {
   return (
     <div className="space-y-2">
       <div className="flex items-center space-x-4">
-        <Dice />
-        <div>Last Roll: {lastDie}</div>
+        <Dice value={lastDie} />
         <div>Required: {requiredLength}</div>
         <div>Start: {startLetter}</div>
         <div>Current Player: {current + 1}</div>
