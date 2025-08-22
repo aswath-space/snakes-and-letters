@@ -1,4 +1,4 @@
-import { Dictionary, hasWord } from '../dictionary/loader';
+import type { Dictionary } from '../dictionary/loader';
 
 export function normalize(word: string): string {
   return word.trim().toLowerCase();
@@ -8,14 +8,15 @@ interface Options {
   length: number;
   startLetter: string;
   usedWords: Set<string>;
-  dictionary: Dictionary;
+  hasWord: (word: string) => boolean;
+  canSatisfy?: (letter: string, length: number) => boolean;
   noRepeats?: boolean;
   useWildcard?: boolean;
 }
 
 export function validateWord(
   word: string,
-  opts: Options
+  opts: Options,
 ): { accepted: boolean; reason?: string } {
   const w = normalize(word);
   if (w.length !== opts.length) {
@@ -26,7 +27,7 @@ export function validateWord(
       return { accepted: false, reason: 'start' };
     }
   }
-  if (!hasWord(opts.dictionary, w)) {
+  if (!opts.hasWord(w)) {
     return { accepted: false, reason: 'dictionary' };
   }
   if (opts.noRepeats && opts.usedWords.has(w)) {
@@ -38,7 +39,7 @@ export function validateWord(
 export function canSatisfy(
   letter: string,
   length: number,
-  dict: Dictionary
+  dict: Dictionary,
 ): boolean {
   const lower = letter.toLowerCase();
   for (const word of dict) {
