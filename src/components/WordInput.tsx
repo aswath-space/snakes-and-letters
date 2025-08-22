@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { validateWord } from '../engine/validate';
 import { hasWord } from '../dictionary/loader';
