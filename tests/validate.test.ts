@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { validateWord } from '../src/engine/validate';
-import { loadWordlist } from '../src/dictionary/loader';
+import { loadWordlist, hasWord } from '../src/dictionary/loader';
 
 let dict: Set<string>;
 
@@ -14,7 +14,7 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'a',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: (w) => hasWord(dict, w),
       noRepeats: false,
     });
     expect(res.accepted).toBe(true);
@@ -25,7 +25,7 @@ describe('validateWord', () => {
       length: 4,
       startLetter: 'a',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: (w) => hasWord(dict, w),
       noRepeats: false,
     });
     expect(res.accepted).toBe(false);
@@ -37,7 +37,7 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'b',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: (w) => hasWord(dict, w),
       noRepeats: false,
     });
     expect(res.accepted).toBe(false);
@@ -45,7 +45,7 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'b',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: (w) => hasWord(dict, w),
       noRepeats: false,
       useWildcard: true,
     });
@@ -57,7 +57,7 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'z',
       usedWords: new Set(),
-      dictionary: dict,
+      hasWord: (w) => hasWord(dict, w),
       noRepeats: false,
     });
     expect(res.accepted).toBe(false);
@@ -70,7 +70,7 @@ describe('validateWord', () => {
       length: 5,
       startLetter: 'a',
       usedWords: used,
-      dictionary: dict,
+      hasWord: (w) => hasWord(dict, w),
       noRepeats: true,
     });
     expect(res.accepted).toBe(false);

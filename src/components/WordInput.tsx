@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { validateWord } from '../engine/validate';
+import { hasWord } from '../dictionary/loader';
 
 export default function WordInput() {
   const [word, setWord] = useState('');
@@ -21,7 +22,7 @@ export default function WordInput() {
     length: requiredLength,
     startLetter,
     usedWords,
-    dictionary,
+    hasWord: (w) => hasWord(dictionary, w),
     noRepeats: rules.noRepeats,
     useWildcard,
   });

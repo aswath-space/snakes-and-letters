@@ -8,6 +8,7 @@ import {
 } from '../engine';
 import { rollDie } from '../engine/dice';
 import { validateWord, normalize } from '../engine/validate';
+import { hasWord } from '../dictionary/loader';
 import type { Dictionary } from '../dictionary/loader';
 
 export type PlayerId = 0 | 1;
@@ -64,7 +65,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       length: state.requiredLength,
       startLetter: state.startLetter,
       usedWords: state.usedWords,
-      dictionary: state.dictionary,
+      hasWord: (w) => hasWord(state.dictionary, w),
       noRepeats: state.rules.noRepeats,
       useWildcard,
     });
