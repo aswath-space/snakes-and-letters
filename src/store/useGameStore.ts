@@ -23,6 +23,7 @@ interface GameState {
   wildcards: Record<PlayerId, number>;
   requiredLength: number;
   dictionary: Dictionary;
+  setDictionary(dict: Dictionary): void;
   newGame(rules?: Partial<Rules>): void;
   roll(): void;
   submitWord(
@@ -37,18 +38,21 @@ export const useGameStore = create<GameState>((set, get) => ({
   positions: { 0: 0, 1: 0 },
   current: 0,
   lastDie: 0,
-  startLetter: 'a',
+  startLetter: String.fromCharCode(97 + Math.floor(Math.random() * 26)),
   usedWords: new Set(),
   wildcards: { 0: 2, 1: 2 },
   requiredLength: 0,
   dictionary: new Set(),
+  setDictionary(dict) {
+    set({ dictionary: dict });
+  },
   newGame(rules) {
     set({
       rules: { ...defaultRules, ...rules },
       positions: { 0: 0, 1: 0 },
       current: 0,
       lastDie: 0,
-      startLetter: 'a',
+      startLetter: String.fromCharCode(97 + Math.floor(Math.random() * 26)),
       usedWords: new Set(),
       wildcards: { 0: 2, 1: 2 },
       requiredLength: 0,

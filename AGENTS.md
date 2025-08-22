@@ -217,7 +217,7 @@ Rules for actions (must implement):
 ## 9. PWA requirements
 
 - `public/manifest.webmanifest` with name, short_name, theme/background.
-- Icons: 192 & 512 PNG.
+- Icons: `favicon.svg` plus PNG icons (`/icons/196.png`, `/icons/512.png`).
 - `src/pwa/service-worker.ts` with basic asset caching (Vite plugin or Workbox ok).
 - Register SW in `main.tsx` via `registerSW.ts`.
 - Pass core Lighthouse PWA checks locally.

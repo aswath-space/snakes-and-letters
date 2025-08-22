@@ -69,9 +69,6 @@ export default function WordInput() {
         >
           Submit
         </button>
-        <button className="border px-2" onClick={endTurn}>
-          End Turn
-        </button>
       </div>
       {!validation.accepted && (word.length > 0 || requiredLength > 0) && (
         <div className="text-sm text-red-500">
