@@ -40,7 +40,7 @@ snakes-and-letters/
 ├─ public/
 │  ├─ favicon.svg
 │  ├─ manifest.webmanifest
-│  ├─ icons/                # 196.png, 512.png (ignored in git)
+│  ├─ icons/                      # 192/512 pngs for PWA
 │  └─ dictionary/
 │     └─ english.txt              # simple newline word list (MVP)
 ├─ src/
