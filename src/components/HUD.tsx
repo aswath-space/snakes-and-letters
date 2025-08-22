@@ -2,21 +2,15 @@ import Dice from './Dice';
 import { useGameStore } from '../store/useGameStore';
 
 export default function HUD() {
-  const {
-    requiredLength,
-    startLetter,
-    lastDie,
-    wildcards,
-    current,
-    positions,
-  } = useGameStore();
+  const { requiredLength, startLetter, wildcards, current, positions } =
+    useGameStore();
   return (
     <div className="space-y-2">
       <div className="flex items-center space-x-4">
-        <Dice value={lastDie} />
-        <div>Required: {requiredLength}</div>
+        <Dice />
+        <div>Required: {requiredLength || '-'}</div>
         <div>Start: {startLetter}</div>
-        <div>Current Player: {current + 1}</div>
+        <div>Current: P{current + 1}</div>
         <div>Wildcards: {wildcards[current]}</div>
       </div>
       <div className="flex space-x-4">
