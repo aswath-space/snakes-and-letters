@@ -1,6 +1,7 @@
 import { useGameStore } from '../store/useGameStore';
 import Cell from './Cell';
 import { indexToPosition } from '../engine/board';
+import { LayoutGroup } from 'framer-motion';
 
 const CELL_SIZE = 32; // w-8 = 2rem ~32px
 
@@ -39,11 +40,13 @@ export default function Board() {
   });
 
   return (
-    <div className="relative w-80 h-80">
-      <div className="grid grid-cols-10 w-full h-full">{cells}</div>
-      <svg className="absolute inset-0 w-full h-full pointer-events-none">
-        {lines}
-      </svg>
-    </div>
+    <LayoutGroup>
+      <div className="relative w-80 h-80">
+        <div className="grid grid-cols-10 w-full h-full">{cells}</div>
+        <svg className="absolute inset-0 w-full h-full pointer-events-none">
+          {lines}
+        </svg>
+      </div>
+    </LayoutGroup>
   );
 }
