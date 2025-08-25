@@ -5,7 +5,7 @@ type SetupOptions = {
   challengeMode: boolean;
   noRepeats: boolean;
   timer: boolean;
-  mode: 'bot' | 'multi';
+  mode: 'bot' | 'multi' | 'zen';
 };
 
 interface Props {
@@ -17,7 +17,7 @@ export default function GameSetupModal({ onStart }: Props) {
   const [challengeMode, setChallengeMode] = useState(false);
   const [noRepeats, setNoRepeats] = useState(false);
   const [timer, setTimer] = useState(false);
-  const [mode, setMode] = useState<'bot' | 'multi'>('multi');
+  const [mode, setMode] = useState<'bot' | 'multi' | 'zen'>('multi');
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50">
@@ -61,6 +61,14 @@ export default function GameSetupModal({ onStart }: Props) {
         </label>
         <div className="text-sm space-y-1">
           <div>Players</div>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={mode === 'zen'}
+              onChange={() => setMode('zen')}
+            />
+            Zen Mode
+          </label>
           <label className="flex items-center gap-2">
             <input
               type="radio"
