@@ -1,3 +1,4 @@
+/* Tailwind layers to generate base styles and utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

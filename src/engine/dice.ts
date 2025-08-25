@@ -1,3 +1,4 @@
+// Simple seeded random number generator for deterministic dice rolls
 export class RNG {
   private seed: number;
   constructor(seed = Date.now()) {
@@ -9,6 +10,7 @@ export class RNG {
   }
 }
 
+// Roll a die using optional RNG; returns values 3-6
 export function rollDie(rng?: RNG): number {
   const r = rng ? rng.next() : Math.random();
   // Die now ranges 3-6 to avoid one- or two-letter rounds

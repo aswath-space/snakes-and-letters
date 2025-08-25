@@ -1,3 +1,4 @@
+// Heads-up display showing game stats and controls
 import Dice from './Dice';
 import { useGameStore } from '../store/useGameStore';
 
@@ -7,6 +8,7 @@ export default function HUD() {
   return (
     <div className="p-4 bg-white rounded shadow flex flex-col space-y-2 text-primary">
       <Dice />
+      {/* Display current turn information */}
       <div>Required: {requiredLength || '-'}</div>
       <div>Start: {startLetter}</div>
       <div>Current: {rules.mode === 'zen' ? 'P1' : `P${current + 1}`}</div>

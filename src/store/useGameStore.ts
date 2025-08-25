@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+// Core engine helpers and types
 import {
   Rules,
   CellIndex,
@@ -15,6 +16,7 @@ import type { Dictionary } from '../dictionary/loader';
 
 export type PlayerId = 0 | 1;
 
+// State and actions managed by Zustand
 interface GameState {
   rules: Rules;
   positions: Record<PlayerId, CellIndex>;
@@ -55,6 +57,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   setDictionary(dict) {
     set({ dictionary: dict });
   },
+  // Start a new game optionally overriding rules
   newGame(rules) {
     const merged: Rules = { ...defaultRules, ...rules };
     if (
@@ -80,11 +83,13 @@ export const useGameStore = create<GameState>((set, get) => ({
       winner: null,
     });
   },
+  // Roll the die to determine required word length
   roll() {
     if (get().winner !== null) return;
     const die = rollDie();
     set({ lastDie: die, requiredLength: die });
   },
+  // Validate and apply a submitted word
   submitWord(word, useWildcard = false) {
     const state = get();
     if (state.winner !== null) {
@@ -132,6 +137,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
     return { accepted: true };
   },
+  // Advance to next player's turn or trigger AI
   endTurn() {
     const state = get();
     if (state.winner !== null) {
@@ -159,6 +165,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       set({ current: 0, requiredLength: 0 });
     }
   },
+  // Toggle sound effects on/off
   toggleMute() {
     set((s) => ({ muted: !s.muted }));
   },

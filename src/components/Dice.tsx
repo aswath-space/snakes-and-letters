@@ -1,3 +1,4 @@
+// Visual dice component that can be rolled to produce a value
 import { useEffect, useRef } from 'react';
 import { useGameStore } from '../store/useGameStore';
 
@@ -30,6 +31,7 @@ export default function Dice({ value }: DiceProps) {
       className="w-12 h-12 border rounded flex items-center justify-center text-2xl bg-secondary text-white"
       onClick={() => {
         roll();
+        // Play sound effect when not muted
         if (!muted) rollSound.current?.play();
       }}
       aria-label="Roll die"

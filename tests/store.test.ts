@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
+// State store and helpers under test
 import { useGameStore } from '../src/store/useGameStore';
 import { loadWordlist } from '../src/dictionary/loader';
 import * as diceModule from '../src/engine/dice';

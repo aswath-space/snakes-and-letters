@@ -1,3 +1,4 @@
+// Displays active mode and rule toggles for quick reference
 import { useGameStore } from '../store/useGameStore';
 
 export default function ModeSummary() {
@@ -7,6 +8,7 @@ export default function ModeSummary() {
       <h2 className="font-bold text-base">Modes</h2>
       <div>{rules.challengeMode ? 'Challenge' : 'Easy'}</div>
       <div>{rules.noRepeats ? 'No Repeats' : 'Repeats Allowed'}</div>
+      {/* Conditionally show extra mode indicators */}
       {rules.timer && <div>Timer Enabled</div>}
       {rules.mode === 'bot' && <div>Vs Bot</div>}
       {rules.mode === 'zen' && <div>Zen Mode</div>}

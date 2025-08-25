@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+// Board utility functions under test
 import {
   indexToPosition,
   clampIndex,

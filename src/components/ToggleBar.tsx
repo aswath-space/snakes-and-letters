@@ -1,3 +1,4 @@
+// Toolbar allowing the user to toggle various game options
 import { useGameStore } from '../store/useGameStore';
 import type { ChangeEvent } from 'react';
 
@@ -34,6 +35,7 @@ export default function ToggleBar() {
           <option value={12}>12×12</option>
         </select>
       </div>
+      {/* Toggle challenge mode */}
       <div className="flex items-center space-x-1">
         <input
           id="toggle-challenge"
@@ -43,6 +45,7 @@ export default function ToggleBar() {
         />
         <label htmlFor="toggle-challenge">Challenge</label>
       </div>
+      {/* Toggle no-repeats rule */}
       <div className="flex items-center space-x-1">
         <input
           id="toggle-no-repeats"
@@ -52,6 +55,7 @@ export default function ToggleBar() {
         />
         <label htmlFor="toggle-no-repeats">No Repeats</label>
       </div>
+      {/* Toggle turn timer */}
       <div className="flex items-center space-x-1">
         <input
           id="toggle-timer"
@@ -61,6 +65,7 @@ export default function ToggleBar() {
         />
         <label htmlFor="toggle-timer">Timer</label>
       </div>
+      {/* Toggle sound effects */}
       <div className="flex items-center space-x-1">
         <input
           id="toggle-mute"

@@ -1,5 +1,7 @@
+// Word validation utilities used by the game engine
 import type { Dictionary } from '../dictionary/loader';
 
+// Normalize player input for consistent comparisons
 export function normalize(word: string): string {
   return word.trim().toLowerCase();
 }
@@ -14,9 +16,10 @@ interface Options {
   canSatisfy?: (letter: string, length: number) => boolean;
 }
 
+// Validate a word against length, starting letter and dictionary rules
 export function validateWord(
   word: string,
-  opts: Options
+  opts: Options,
 ): { accepted: boolean; reason?: string } {
   const w = normalize(word);
   if (w.length !== opts.length) {
@@ -36,10 +39,11 @@ export function validateWord(
   return { accepted: true };
 }
 
+// Determine if any dictionary word fits the criteria
 export function canSatisfy(
   letter: string,
   length: number,
-  dict: Dictionary
+  dict: Dictionary,
 ): boolean {
   const lower = letter.toLowerCase();
   for (const word of dict) {

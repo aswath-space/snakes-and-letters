@@ -1,3 +1,4 @@
+// Renders the game board grid and decorative snakes and ladders
 import { useGameStore } from '../store/useGameStore';
 import Cell from './Cell';
 import { indexToPosition } from '../engine/board';
@@ -8,6 +9,7 @@ export default function Board() {
   const width = Math.round(Math.sqrt(rules.boardSize));
   const cellSize = 100 / width;
   const cells: JSX.Element[] = [];
+  // Build serpentine board layout
   for (let row = width - 1; row >= 0; row--) {
     for (let col = 0; col < width; col++) {
       const index = row * width + (row % 2 === 0 ? col : width - 1 - col);
@@ -23,6 +25,7 @@ export default function Board() {
     }
   }
 
+  // Merge snakes and ladders into decorative lines on the board
   const decorations = [
     ...rules.snakes.map((s) => ({ ...s, type: 'snake' })),
     ...rules.ladders.map((l) => ({ ...l, type: 'ladder' })),

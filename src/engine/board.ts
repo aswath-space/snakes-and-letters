@@ -1,12 +1,15 @@
+// Board-related helpers: coordinate conversions and snake/ladder generation
 import { CellIndex, Rules, SnakeOrLadder } from './types';
 import { randomInt } from '../utils/random';
 
+// Ensure an index stays within board bounds
 export function clampIndex(i: CellIndex, boardSize: number): CellIndex {
   if (i < 0) return 0;
   if (i >= boardSize) return boardSize - 1;
   return i;
 }
 
+// Convert a linear cell index into board row/column coordinates
 export function indexToPosition(
   i: CellIndex,
   boardSize: number,
@@ -19,9 +22,10 @@ export function indexToPosition(
   return { row, col };
 }
 
+// Follow chains of snakes or ladders until a stable cell is reached
 export function resolveSnakesAndLadders(
   index: CellIndex,
-  rules: Rules
+  rules: Rules,
 ): CellIndex {
   let current = index;
   const visited = new Set<CellIndex>();
@@ -45,6 +49,7 @@ export function resolveSnakesAndLadders(
   return Math.min(current, last);
 }
 
+// Procedurally create random snakes and ladders for a board
 export function generateSnakesAndLadders(
   boardSize: number,
   snakeCount = 4,

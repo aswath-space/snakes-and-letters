@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+// Test the snake and ladder resolution logic
 import { resolveSnakesAndLadders } from '../src/engine/board';
 import { Rules } from '../src/engine/types';
 

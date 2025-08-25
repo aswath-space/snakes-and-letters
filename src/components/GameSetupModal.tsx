@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+// Options chosen in the setup screen
 type SetupOptions = {
   boardSize: number;
   challengeMode: boolean;
@@ -86,6 +87,7 @@ export default function GameSetupModal({ onStart }: Props) {
             Play vs Bot
           </label>
         </div>
+        {/* Start button initializes game with selected options */}
         <button
           type="button"
           className="w-full bg-blue-500 text-white py-1 rounded"

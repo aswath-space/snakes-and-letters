@@ -1,3 +1,4 @@
+// Individual board cell that can display player tokens and letters
 import { PlayerId } from '../store/useGameStore';
 import { motion } from 'framer-motion';
 import type { Rules } from '../engine';
@@ -12,6 +13,7 @@ interface CellProps {
 export default function Cell({ index, positions, letter, mode }: CellProps) {
   const tokens: JSX.Element[] = [];
 
+  // Render player one token if on this cell
   if (positions[0] === index) {
     tokens.push(
       <motion.img
@@ -25,6 +27,7 @@ export default function Cell({ index, positions, letter, mode }: CellProps) {
     );
   }
 
+  // Only show second player when not in single-player mode
   if (mode !== 'zen' && positions[1] === index) {
     tokens.push(
       <motion.img
