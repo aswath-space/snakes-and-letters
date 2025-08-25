@@ -8,6 +8,7 @@ import {
 } from '../engine';
 import { rollDie } from '../engine/dice';
 import { validateWord, normalize } from '../engine/validate';
+import { chooseRandomWord } from '../engine/ai';
 import { hasWord } from '../dictionary/loader';
 import type { Dictionary } from '../dictionary/loader';
 
@@ -103,5 +104,21 @@ export const useGameStore = create<GameState>((set, get) => ({
       current: s.current === 0 ? 1 : 0,
       requiredLength: 0,
     }));
+    const state = get();
+    if (state.rules.mode === 'single' && state.current === 1) {
+      get().roll();
+      const aiState = get();
+      const word = chooseRandomWord({
+        dictionary: aiState.dictionary,
+        length: aiState.requiredLength,
+        startLetter: aiState.startLetter,
+        usedWords: aiState.usedWords,
+        noRepeats: aiState.rules.noRepeats,
+      });
+      if (word) {
+        get().submitWord(word);
+      }
+      set({ current: 0, requiredLength: 0 });
+    }
   },
 }));
