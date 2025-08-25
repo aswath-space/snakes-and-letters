@@ -7,10 +7,12 @@ import { LayoutGroup } from 'framer-motion';
 
 export default function Board() {
   const { positions, rules } = useGameStore();
+  const width = Math.round(Math.sqrt(rules.boardSize));
+  const cellSize = 100 / width;
   const cells: JSX.Element[] = [];
-  for (let row = 9; row >= 0; row--) {
-    for (let col = 0; col < 10; col++) {
-      const index = row * 10 + (row % 2 === 0 ? col : 9 - col);
+  for (let row = width - 1; row >= 0; row--) {
+    for (let col = 0; col < width; col++) {
+      const index = row * width + (row % 2 === 0 ? col : width - 1 - col);
       cells.push(<Cell key={index} index={index} positions={positions} />);
     }
   }
@@ -21,12 +23,12 @@ export default function Board() {
   ].map((item, i) => {
     const from = indexToPosition(item.from, rules.boardSize);
     const to = indexToPosition(item.to, rules.boardSize);
-    const dx = (to.col - from.col) * 10;
-    const dy = (from.row - to.row) * 10;
+    const dx = (to.col - from.col) * cellSize;
+    const dy = (from.row - to.row) * cellSize;
     const length = Math.sqrt(dx * dx + dy * dy);
     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-    const x = from.col * 10 + 5;
-    const y = (9 - from.row) * 10 + 5;
+    const x = from.col * cellSize + cellSize / 2;
+    const y = (width - 1 - from.row) * cellSize + cellSize / 2;
     // Image files are not included; provide them at /public/assets.
     const src = `/assets/${item.type}.svg`;
     return (
@@ -50,7 +52,12 @@ export default function Board() {
   return (
     <LayoutGroup>
       <div className="relative w-full max-w-sm aspect-square mx-auto">
-        <div className="grid grid-cols-10 w-full h-full">{cells}</div>
+        <div
+          className="grid w-full h-full"
+          style={{ gridTemplateColumns: `repeat(${width}, 1fr)` }}
+        >
+          {cells}
+        </div>
         {decorations}
       </div>
     </LayoutGroup>
