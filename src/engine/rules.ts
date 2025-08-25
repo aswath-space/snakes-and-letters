@@ -1,6 +1,48 @@
-import { Rules } from './types';
+import { Rules, SnakeOrLadder } from './types';
+
+function randomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function generateSnakesAndLadders(
+  rows: number,
+  cols: number,
+  snakeCount = 4,
+  ladderCount = 4,
+): { snakes: SnakeOrLadder[]; ladders: SnakeOrLadder[] } {
+  const size = rows * cols;
+  const snakes: SnakeOrLadder[] = [];
+  const ladders: SnakeOrLadder[] = [];
+  const used = new Set<number>();
+
+  const pickPair = (isSnake: boolean): SnakeOrLadder => {
+    let from = 0;
+    let to = 0;
+    do {
+      from = randomInt(1, size - 1);
+      to = randomInt(1, size - 1);
+    } while (
+      from === to ||
+      used.has(from) ||
+      (isSnake ? from <= to : from >= to)
+    );
+    used.add(from);
+    return { from, to };
+  };
+
+  for (let i = 0; i < snakeCount; i++) {
+    snakes.push(pickPair(true));
+  }
+  for (let i = 0; i < ladderCount; i++) {
+    ladders.push(pickPair(false));
+  }
+
+  return { snakes, ladders };
+}
 
 export const defaultRules: Rules = {
+  rows: 10,
+  cols: 10,
   boardSize: 100,
   snakes: [
     { from: 16, to: 6 },
@@ -20,4 +62,5 @@ export const defaultRules: Rules = {
   challengeMode: false,
   noRepeats: false,
   timer: false,
+  randomSnakes: false,
 };

@@ -6,6 +6,8 @@ export interface SnakeOrLadder {
 }
 
 export interface Rules {
+  rows: number;
+  cols: number;
   boardSize: number;
   snakes: SnakeOrLadder[];
   ladders: SnakeOrLadder[];
@@ -13,4 +15,5 @@ export interface Rules {
   challengeMode: boolean;
   noRepeats: boolean;
   timer: boolean;
+  randomSnakes: boolean;
 }

@@ -3,21 +3,29 @@ import { resolveSnakesAndLadders } from '../src/engine/board';
 import { Rules } from '../src/engine/types';
 
 const chainRules: Rules = {
+  rows: 10,
+  cols: 10,
   boardSize: 100,
   snakes: [{ from: 22, to: 3 }],
   ladders: [{ from: 3, to: 22 }],
   allowWildcards: true,
   challengeMode: false,
   noRepeats: false,
+  timer: false,
+  randomSnakes: false,
 };
 
 const ladderRules: Rules = {
+  rows: 10,
+  cols: 10,
   boardSize: 100,
   snakes: [],
   ladders: [{ from: 4, to: 20 }],
   allowWildcards: true,
   challengeMode: false,
   noRepeats: false,
+  timer: false,
+  randomSnakes: false,
 };
 
 describe('resolveSnakesAndLadders', () => {
