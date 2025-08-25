@@ -8,7 +8,7 @@ export default function ModeSummary() {
       <div>{rules.challengeMode ? 'Challenge' : 'Easy'}</div>
       <div>{rules.noRepeats ? 'No Repeats' : 'Repeats Allowed'}</div>
       {rules.timer && <div>Timer Enabled</div>}
-      {rules.mode === 'single' && <div>Single Player</div>}
+      {rules.mode === 'bot' && <div>Vs Bot</div>}
     </div>
   );
 }

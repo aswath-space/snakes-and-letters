@@ -5,7 +5,7 @@ type SetupOptions = {
   challengeMode: boolean;
   noRepeats: boolean;
   timer: boolean;
-  mode: 'single' | 'multi';
+  mode: 'bot' | 'multi';
 };
 
 interface Props {
@@ -17,7 +17,7 @@ export default function GameSetupModal({ onStart }: Props) {
   const [challengeMode, setChallengeMode] = useState(false);
   const [noRepeats, setNoRepeats] = useState(false);
   const [timer, setTimer] = useState(false);
-  const [mode, setMode] = useState<'single' | 'multi'>('multi');
+  const [mode, setMode] = useState<'bot' | 'multi'>('multi');
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50">
@@ -72,10 +72,10 @@ export default function GameSetupModal({ onStart }: Props) {
           <label className="flex items-center gap-2">
             <input
               type="radio"
-              checked={mode === 'single'}
-              onChange={() => setMode('single')}
+              checked={mode === 'bot'}
+              onChange={() => setMode('bot')}
             />
-            Single Player
+            Play vs Bot
           </label>
         </div>
         <button
