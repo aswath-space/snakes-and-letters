@@ -6,7 +6,7 @@ function normalize(text: string): Dictionary {
     text
       .split(/\r?\n/)
       .map((w) => w.trim().toLowerCase())
-      .filter(Boolean)
+      .filter(Boolean),
   );
 }
 
@@ -15,12 +15,22 @@ function normalize(text: string): Dictionary {
  * - Browser: fetch('/dictionary/english.txt') served from /public
  * - Node/Vitest: reads {projectRoot}/public/dictionary/english.txt
  */
+export interface LoadOptions {
+  retries?: number;
+  delayMs?: number;
+  fetchFn?: (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+}
+
 export async function loadWordlist(
-  path = '/dictionary/english.txt'
+  path = '/dictionary/english.txt',
+  opts: LoadOptions = {},
 ): Promise<Dictionary> {
   const isNode = typeof process !== 'undefined' && !!process.versions?.node;
+  const retries = opts.retries ?? 2;
+  const delayMs = opts.delayMs ?? 500;
+  const fetchFn = opts.fetchFn;
 
-  if (isNode) {
+  if (isNode && !fetchFn) {
     const { readFile } = await import('fs/promises');
     const { resolve } = await import('path');
 
@@ -32,11 +42,26 @@ export async function loadWordlist(
     return normalize(text);
   }
 
-  // Browser (Vite dev/prod)
-  const res = await fetch(path, { cache: 'no-cache' });
-  if (!res.ok) throw new Error(`Failed to fetch dictionary: ${path} (${res.status})`);
-  const text = await res.text();
-  return normalize(text);
+  const fetcher = fetchFn ?? fetch;
+  // Browser (Vite dev/prod) with retry logic
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetcher(path, { cache: 'no-cache' });
+      if (!res.ok) {
+        throw new Error(`Failed to fetch dictionary: ${path} (${res.status})`);
+      }
+      const text = await res.text();
+      return normalize(text);
+    } catch (err) {
+      if (attempt === retries) {
+        throw new Error(
+          `Unable to load dictionary after ${retries + 1} attempts`,
+        );
+      }
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  throw new Error('Failed to load dictionary');
 }
 
 export function hasWord(dict: Dictionary, word: string): boolean {
