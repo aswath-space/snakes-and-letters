@@ -3,8 +3,6 @@ import Cell from './Cell';
 import { indexToPosition } from '../engine/board';
 import { LayoutGroup } from 'framer-motion';
 
-// Placeholder asset paths: add `snake.svg` and `ladder.svg` under `public/assets`.
-
 export default function Board() {
   const { positions, rules, boardLetters } = useGameStore();
   const width = Math.round(Math.sqrt(rules.boardSize));
@@ -37,19 +35,15 @@ export default function Board() {
     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
     const x = from.col * cellSize + cellSize / 2;
     const y = (width - 1 - from.row) * cellSize + cellSize / 2;
-    // Image files are not included; provide them at /public/assets.
-    const src = `/assets/${item.type}.svg`;
+    const color = item.type === 'snake' ? 'bg-green-600' : 'bg-yellow-500';
     return (
-      <img
+      <div
         key={i}
-        src={src}
-        alt={item.type}
-        className="absolute pointer-events-none"
+        className={`absolute pointer-events-none ${color} h-2`}
         style={{
           left: `${x}%`,
           top: `${y}%`,
           width: `${length}%`,
-          height: '5%',
           transform: `translateY(-50%) rotate(${angle}deg)`,
           transformOrigin: '0% 50%',
         }}
