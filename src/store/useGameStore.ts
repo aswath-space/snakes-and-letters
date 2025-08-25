@@ -31,7 +31,7 @@ interface GameState {
   roll(): void;
   submitWord(
     word: string,
-    useWildcard?: boolean
+    useWildcard?: boolean,
   ): { accepted: boolean; reason?: string };
   endTurn(): void;
   muted: boolean;
@@ -124,12 +124,14 @@ export const useGameStore = create<GameState>((set, get) => ({
     return { accepted: true };
   },
   endTurn() {
-    set((s) => ({
-      current: s.current === 0 ? 1 : 0,
-      requiredLength: 0,
-    }));
     const state = get();
-    if (state.rules.mode === 'bot' && state.current === 1) {
+    if (state.rules.mode === 'zen') {
+      set({ requiredLength: 0 });
+      return;
+    }
+    set({ current: state.current === 0 ? 1 : 0, requiredLength: 0 });
+    const after = get();
+    if (after.rules.mode === 'bot' && after.current === 1) {
       get().roll();
       const aiState = get();
       const word = chooseRandomWord({

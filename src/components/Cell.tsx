@@ -1,13 +1,15 @@
 import { PlayerId } from '../store/useGameStore';
 import { motion } from 'framer-motion';
+import type { Rules } from '../engine';
 
 interface CellProps {
   index: number;
   positions: Record<PlayerId, number>;
   letter?: string;
+  mode: Rules['mode'];
 }
 
-export default function Cell({ index, positions, letter }: CellProps) {
+export default function Cell({ index, positions, letter, mode }: CellProps) {
   const tokens: JSX.Element[] = [];
 
   if (positions[0] === index) {
@@ -19,11 +21,11 @@ export default function Cell({ index, positions, letter }: CellProps) {
         alt="P1"
         className="absolute top-1 right-1 w-4 h-4"
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-      />
+      />,
     );
   }
 
-  if (positions[1] === index) {
+  if (mode !== 'zen' && positions[1] === index) {
     tokens.push(
       <motion.img
         layoutId="p2"
@@ -32,7 +34,7 @@ export default function Cell({ index, positions, letter }: CellProps) {
         alt="P2"
         className="absolute bottom-1 right-1 w-4 h-4"
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-      />
+      />,
     );
   }
 

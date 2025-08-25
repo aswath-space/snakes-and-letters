@@ -64,7 +64,13 @@ describe('game store', () => {
     expect(useGameStore.getState().current).toBe(1);
   });
 
-  it('AI plays automatically in single mode', () => {
+  it('zen mode keeps turn with player 1', () => {
+    useGameStore.getState().newGame({ mode: 'zen' });
+    useGameStore.getState().endTurn();
+    expect(useGameStore.getState().current).toBe(0);
+  });
+
+  it('AI plays automatically in bot mode', () => {
     useGameStore.getState().newGame({ mode: 'bot' });
     useGameStore.setState({ dictionary: dict, startLetter: 'a' });
     const rollSpy = vi.spyOn(diceModule, 'rollDie').mockReturnValue(5);

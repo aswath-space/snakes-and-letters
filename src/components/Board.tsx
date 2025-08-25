@@ -19,6 +19,7 @@ export default function Board() {
           index={index}
           positions={positions}
           letter={boardLetters[index]}
+          mode={rules.mode}
         />,
       );
     }
