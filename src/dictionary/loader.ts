@@ -11,9 +11,11 @@ function normalize(text: string): Dictionary {
 }
 
 /**
- * Loads the word list from:
- * - Browser: fetch('/dictionary/english.txt') served from /public
- * - Node/Vitest: reads {projectRoot}/public/dictionary/english.txt
+ * Loads the word list given an identifier or path:
+ * - identifier: "english" -> '/dictionary/english.txt'
+ * - full path: '/dictionary/animals.txt'
+ * - Browser: fetch('/dictionary/...') served from /public
+ * - Node/Vitest: reads {projectRoot}/public/dictionary/...txt
  */
 export interface LoadOptions {
   retries?: number;
@@ -22,13 +24,18 @@ export interface LoadOptions {
 }
 
 export async function loadWordlist(
-  path = '/dictionary/english.txt',
+  identifier = 'english',
   opts: LoadOptions = {},
 ): Promise<Dictionary> {
   const isNode = typeof process !== 'undefined' && !!process.versions?.node;
   const retries = opts.retries ?? 2;
   const delayMs = opts.delayMs ?? 500;
   const fetchFn = opts.fetchFn;
+
+  const path =
+    identifier.startsWith('/') || identifier.endsWith('.txt')
+      ? identifier
+      : `/dictionary/${identifier}.txt`;
 
   if (isNode && !fetchFn) {
     const { readFile } = await import('fs/promises');

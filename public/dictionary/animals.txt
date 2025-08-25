@@ -1,0 +1,10 @@
+ant
+bear
+cat
+dog
+eel
+fox
+goat
+horse
+iguana
+jaguar
