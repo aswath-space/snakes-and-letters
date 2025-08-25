@@ -1,9 +1,9 @@
 export class RNG {
   private seed: number;
-  constructor(seed = Date.now()) {
+  constructor(seed: number = Date.now()) {
     this.seed = seed;
   }
-  next() {
+  next(): number {
     this.seed = (this.seed * 9301 + 49297) % 233280;
     return this.seed / 233280;
   }

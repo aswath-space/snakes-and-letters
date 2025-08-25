@@ -4,7 +4,7 @@ import { indexToPosition } from '../engine/board';
 
 const CELL_SIZE = 32; // w-8 = 2rem ~32px
 
-export default function Board() {
+export default function Board(): JSX.Element {
   const { positions, rules } = useGameStore();
   const cells: JSX.Element[] = [];
   for (let row = 9; row >= 0; row--) {

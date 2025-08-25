@@ -3,7 +3,7 @@ import { useGameStore } from '../store/useGameStore';
 import { validateWord } from '../engine/validate';
 import { hasWord } from '../dictionary/loader';
 
-export default function WordInput() {
+export default function WordInput(): JSX.Element {
   const [word, setWord] = useState('');
   const [useWildcard, setUseWildcard] = useState(false);
   const submitWord = useGameStore((s) => s.submitWord);

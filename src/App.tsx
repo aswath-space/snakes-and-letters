@@ -6,7 +6,7 @@ import ToggleBar from './components/ToggleBar';
 import { loadWordlist } from './dictionary/loader';
 import { useGameStore } from './store/useGameStore';
 
-export default function App() {
+export default function App(): JSX.Element {
   const setDictionary = useGameStore((s) => s.setDictionary);
   const [dictError, setDictError] = useState<string | null>(null);
 

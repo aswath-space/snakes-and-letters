@@ -1,7 +1,9 @@
 import Dice from './Dice';
 import { useGameStore } from '../store/useGameStore';
 
-export default function HUD() {
+export interface HUDProps {}
+
+export default function HUD(): JSX.Element {
   const { requiredLength, startLetter, wildcards, current, positions } =
     useGameStore();
   return (

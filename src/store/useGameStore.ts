@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create, type StoreApi, type UseBoundStore } from 'zustand';
 import {
   Rules,
   CellIndex,
@@ -28,80 +28,84 @@ interface GameState {
   roll(): void;
   submitWord(
     word: string,
-    useWildcard?: boolean
+    useWildcard?: boolean,
   ): { accepted: boolean; reason?: string };
   endTurn(): void;
 }
 
-export const useGameStore = create<GameState>((set, get) => ({
-  rules: defaultRules,
-  positions: { 0: 0, 1: 0 },
-  current: 0,
-  lastDie: 0,
-  startLetter: String.fromCharCode(97 + Math.floor(Math.random() * 26)),
-  usedWords: new Set(),
-  wildcards: { 0: 2, 1: 2 },
-  requiredLength: 0,
-  dictionary: new Set(),
-  setDictionary(dict) {
-    set({ dictionary: dict });
-  },
-  newGame(rules) {
-    set({
-      rules: { ...defaultRules, ...rules },
-      positions: { 0: 0, 1: 0 },
-      current: 0,
-      lastDie: 0,
-      startLetter: String.fromCharCode(97 + Math.floor(Math.random() * 26)),
-      usedWords: new Set(),
-      wildcards: { 0: 2, 1: 2 },
-      requiredLength: 0,
-    });
-  },
-  roll() {
-    const die = rollDie();
-    set({ lastDie: die, requiredLength: die });
-  },
-  submitWord(word, useWildcard = false) {
-    const state = get();
-    const normalized = normalize(word);
-    const validation = validateWord(normalized, {
-      length: state.requiredLength,
-      startLetter: state.startLetter,
-      usedWords: state.usedWords,
-      hasWord: (w) => hasWord(state.dictionary, w),
-      noRepeats: state.rules.noRepeats,
-      useWildcard,
-    });
-    if (!validation.accepted) {
-      if (state.rules.challengeMode) {
-        let pos = state.positions[state.current] - state.lastDie;
-        pos = clampIndex(pos, state.rules.boardSize);
-        set({
-          positions: { ...state.positions, [state.current]: pos },
-        });
+export const useGameStore: UseBoundStore<StoreApi<GameState>> =
+  create<GameState>((set, get) => ({
+    rules: defaultRules,
+    positions: { 0: 0, 1: 0 },
+    current: 0,
+    lastDie: 0,
+    startLetter: String.fromCharCode(97 + Math.floor(Math.random() * 26)),
+    usedWords: new Set(),
+    wildcards: { 0: 2, 1: 2 },
+    requiredLength: 0,
+    dictionary: new Set(),
+    setDictionary(dict: Dictionary): void {
+      set({ dictionary: dict });
+    },
+    newGame(rules?: Partial<Rules>): void {
+      set({
+        rules: { ...defaultRules, ...rules },
+        positions: { 0: 0, 1: 0 },
+        current: 0,
+        lastDie: 0,
+        startLetter: String.fromCharCode(97 + Math.floor(Math.random() * 26)),
+        usedWords: new Set(),
+        wildcards: { 0: 2, 1: 2 },
+        requiredLength: 0,
+      });
+    },
+    roll(): void {
+      const die = rollDie();
+      set({ lastDie: die, requiredLength: die });
+    },
+    submitWord(
+      word: string,
+      useWildcard = false,
+    ): { accepted: boolean; reason?: string } {
+      const state = get();
+      const normalized = normalize(word);
+      const validation = validateWord(normalized, {
+        length: state.requiredLength,
+        startLetter: state.startLetter,
+        usedWords: state.usedWords,
+        hasWord: (w) => hasWord(state.dictionary, w),
+        noRepeats: state.rules.noRepeats,
+        useWildcard,
+      });
+      if (!validation.accepted) {
+        if (state.rules.challengeMode) {
+          let pos = state.positions[state.current] - state.lastDie;
+          pos = clampIndex(pos, state.rules.boardSize);
+          set({
+            positions: { ...state.positions, [state.current]: pos },
+          });
+        }
+        return validation;
       }
-      return validation;
-    }
-    let position = state.positions[state.current] + normalized.length;
-    position = clampIndex(position, state.rules.boardSize);
-    position = resolveSnakesAndLadders(position, state.rules);
-    const newUsed = new Set(state.usedWords);
-    newUsed.add(normalized);
-    const newWildcards = { ...state.wildcards };
-    if (useWildcard) newWildcards[state.current]--;
-    set({
-      positions: { ...state.positions, [state.current]: position },
-      startLetter: normalized.at(-1)!,
-      usedWords: newUsed,
-      wildcards: newWildcards,
-    });
-    return { accepted: true };
-  },
-  endTurn() {
-    set((s) => ({
-      current: s.current === 0 ? 1 : 0,
-      requiredLength: 0,
-    }));
-  },
-}));
+      let position = state.positions[state.current] + normalized.length;
+      position = clampIndex(position, state.rules.boardSize);
+      position = resolveSnakesAndLadders(position, state.rules);
+      const newUsed = new Set(state.usedWords);
+      newUsed.add(normalized);
+      const newWildcards = { ...state.wildcards };
+      if (useWildcard) newWildcards[state.current]--;
+      set({
+        positions: { ...state.positions, [state.current]: position },
+        startLetter: normalized.at(-1)!,
+        usedWords: newUsed,
+        wildcards: newWildcards,
+      });
+      return { accepted: true };
+    },
+    endTurn(): void {
+      set((s) => ({
+        current: s.current === 0 ? 1 : 0,
+        requiredLength: 0,
+      }));
+    },
+  }));

@@ -1,6 +1,8 @@
 import { useGameStore } from '../store/useGameStore';
 
-export default function ToggleBar() {
+export interface ToggleBarProps {}
+
+export default function ToggleBar(): JSX.Element {
   const rules = useGameStore((s) => s.rules);
   const setRules = useGameStore((s) => s.newGame);
   return (

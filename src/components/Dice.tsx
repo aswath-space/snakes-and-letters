@@ -2,11 +2,11 @@ import { useGameStore } from '../store/useGameStore';
 
 const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 
-interface DiceProps {
+export interface DiceProps {
   value?: number;
 }
 
-export default function Dice({ value }: DiceProps) {
+export default function Dice({ value }: DiceProps): JSX.Element {
   if (typeof value === 'number') {
     return (
       <div className="w-12 h-12 border rounded flex items-center justify-center text-2xl">
