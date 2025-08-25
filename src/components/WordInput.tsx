@@ -48,13 +48,19 @@ export default function WordInput() {
   return (
     <div className="space-y-2">
       <div className="flex space-x-2 items-center">
+        <label htmlFor="word-input" className="sr-only">
+          Enter word
+        </label>
         <input
+          id="word-input"
+          type="text"
           className="border p-1"
           value={word}
           onChange={(e) => setWord(e.target.value)}
         />
-        <label className="flex items-center space-x-1">
+        <label htmlFor="use-wildcard" className="flex items-center space-x-1">
           <input
+            id="use-wildcard"
             type="checkbox"
             checked={useWildcard}
             disabled={!canUseWildcard}
@@ -66,6 +72,7 @@ export default function WordInput() {
           className="border px-2"
           onClick={handleSubmit}
           disabled={!validation.accepted}
+          aria-label="Submit word"
         >
           Submit
         </button>
