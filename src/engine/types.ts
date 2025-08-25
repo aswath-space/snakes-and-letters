@@ -13,5 +13,5 @@ export interface Rules {
   challengeMode: boolean;
   noRepeats: boolean;
   timer: boolean;
-  mode: 'single' | 'multi';
+  mode: 'bot' | 'multi';
 }

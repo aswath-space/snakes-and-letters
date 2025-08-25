@@ -129,7 +129,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       requiredLength: 0,
     }));
     const state = get();
-    if (state.rules.mode === 'single' && state.current === 1) {
+    if (state.rules.mode === 'bot' && state.current === 1) {
       get().roll();
       const aiState = get();
       const word = chooseRandomWord({

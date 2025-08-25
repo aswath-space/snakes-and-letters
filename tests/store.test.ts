@@ -65,7 +65,7 @@ describe('game store', () => {
   });
 
   it('AI plays automatically in single mode', () => {
-    useGameStore.getState().newGame({ mode: 'single' });
+    useGameStore.getState().newGame({ mode: 'bot' });
     useGameStore.setState({ dictionary: dict, startLetter: 'a' });
     const rollSpy = vi.spyOn(diceModule, 'rollDie').mockReturnValue(5);
     const aiSpy = vi
