@@ -3,17 +3,15 @@ import Board from './components/Board';
 import WordInput from './components/WordInput';
 import HUD from './components/HUD';
 import ToggleBar from './components/ToggleBar';
-import { loadWordlist } from './dictionary/loader';
-import { useGameStore } from './store/useGameStore';
+import { useDictionaryStore } from './store/dictionaryStore';
 
 export default function App() {
-  const setDictionary = useGameStore((s) => s.setDictionary);
+  const load = useDictionaryStore((s) => s.load);
   const [dictError, setDictError] = useState<string | null>(null);
 
   const loadDict = useCallback(() => {
-    return loadWordlist()
-      .then((d) => {
-        setDictionary(d);
+    return load()
+      .then(() => {
         setDictError(null);
       })
       .catch((e) =>
@@ -23,7 +21,7 @@ export default function App() {
             : 'Failed to load dictionary. Please try again.',
         ),
       );
-  }, [setDictionary]);
+  }, [load]);
 
   useEffect(() => {
     void loadDict();

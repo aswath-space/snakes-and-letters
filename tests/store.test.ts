@@ -1,16 +1,14 @@
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 import { useGameStore } from '../src/store/useGameStore';
-import { loadWordlist } from '../src/dictionary/loader';
-
-let dict: Set<string>;
+import { useDictionaryStore } from '../src/store/dictionaryStore';
 
 beforeAll(async () => {
-  dict = await loadWordlist();
+  await useDictionaryStore.getState().load();
 });
 
 beforeEach(() => {
   useGameStore.getState().newGame();
-  useGameStore.setState({ dictionary: dict, startLetter: 'a' });
+  useGameStore.setState({ startLetter: 'a' });
 });
 
 describe('game store', () => {
