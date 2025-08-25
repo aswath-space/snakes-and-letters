@@ -9,12 +9,14 @@ import { useGameStore } from './store/useGameStore';
 export default function App() {
   const setDictionary = useGameStore((s) => s.setDictionary);
   const [dictError, setDictError] = useState<string | null>(null);
+  const [dictLoading, setDictLoading] = useState(true);
 
   const loadDict = useCallback(() => {
+    setDictLoading(true);
+    setDictError(null);
     return loadWordlist()
       .then((d) => {
         setDictionary(d);
-        setDictError(null);
       })
       .catch((e) =>
         setDictError(
@@ -22,14 +24,21 @@ export default function App() {
             ? e.message
             : 'Failed to load dictionary. Please try again.',
         ),
-      );
+      )
+      .finally(() => setDictLoading(false));
   }, [setDictionary]);
 
   useEffect(() => {
     void loadDict();
   }, [loadDict]);
+
   return (
     <div className="p-4 space-y-4 max-w-md mx-auto">
+      {dictLoading && (
+        <div role="status" className="text-center">
+          Loading dictionary...
+        </div>
+      )}
       {dictError && (
         <div
           role="alert"
@@ -41,10 +50,14 @@ export default function App() {
           </button>
         </div>
       )}
-      <HUD />
-      <Board />
-      <WordInput />
-      <ToggleBar />
+      {!dictLoading && !dictError && (
+        <>
+          <HUD />
+          <Board />
+          <WordInput />
+          <ToggleBar />
+        </>
+      )}
     </div>
   );
 }
