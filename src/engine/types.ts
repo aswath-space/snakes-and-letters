@@ -1,10 +1,13 @@
+// Board cell index represented as a number
 export type CellIndex = number;
 
+// Mapping from one cell to another for snakes or ladders
 export interface SnakeOrLadder {
   from: CellIndex;
   to: CellIndex;
 }
 
+// Game rules configuring board and gameplay options
 export interface Rules {
   boardSize: number;
   snakes: SnakeOrLadder[];

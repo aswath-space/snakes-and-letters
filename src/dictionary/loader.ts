@@ -1,6 +1,7 @@
 // Keep the current public API shape for minimal churn.
 export type Dictionary = Set<string>;
 
+// Convert raw word list text into a normalized set of lowercase words
 function normalize(text: string): Dictionary {
   return new Set(
     text
@@ -64,10 +65,12 @@ export async function loadWordlist(
   throw new Error('Failed to load dictionary');
 }
 
+// Check for existence of a word in the dictionary
 export function hasWord(dict: Dictionary, word: string): boolean {
   return dict.has(word.toLowerCase());
 }
 
+// Return a small list of candidate words matching the criteria
 export function getHints(
   dict: Dictionary,
   startLetter: string,

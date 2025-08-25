@@ -1,3 +1,4 @@
+// Parameters used by the simple AI to select a word
 interface AiParams {
   dictionary: Set<string>;
   length: number;
@@ -6,6 +7,7 @@ interface AiParams {
   noRepeats: boolean;
 }
 
+// Randomly choose a valid word for the AI
 export function chooseRandomWord({
   dictionary,
   length,

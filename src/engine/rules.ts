@@ -1,3 +1,4 @@
+// Default rule set defining board size and obstacles
 import { Rules } from './types';
 
 export const defaultRules: Rules = {

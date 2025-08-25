@@ -1,3 +1,4 @@
+// Convenience re-exports for engine modules
 export * from './types';
 export * from './board';
 export * from './rules';

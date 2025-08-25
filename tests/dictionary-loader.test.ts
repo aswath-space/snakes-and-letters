@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+// Loader module under test
 import { loadWordlist } from '../src/dictionary/loader';
 
 describe('loadWordlist retries', () => {

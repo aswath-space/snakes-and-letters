@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+// Dictionary hint helper under test
 import { getHints, Dictionary } from '../src/dictionary/loader';
 
 describe('getHints', () => {

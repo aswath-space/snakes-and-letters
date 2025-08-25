@@ -1,3 +1,4 @@
+// Handles player word entry, validation and hints
 import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { validateWord } from '../engine/validate';
@@ -27,6 +28,7 @@ export default function WordInput() {
     current,
   } = useGameStore();
 
+  // Check if current input is valid according to game rules
   const validation = validateWord(word, {
     length: requiredLength,
     startLetter,
@@ -82,6 +84,7 @@ export default function WordInput() {
             }
           }}
         />
+        {/* Optionally bypass starting letter rule */}
         <label htmlFor="use-wildcard" className="flex items-center space-x-1">
           <input
             id="use-wildcard"

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
+// Core game components
 import Board from './components/Board';
 import WordInput from './components/WordInput';
 import HUD from './components/HUD';
 import ModeSummary from './components/ModeSummary';
+// Helper utilities and state store
 import { loadWordlist } from './dictionary/loader';
 import { useGameStore } from './store/useGameStore';
 import GameSetupModal from './components/GameSetupModal';
@@ -15,6 +17,7 @@ export default function App() {
   const [dictLoading, setDictLoading] = useState(true);
   const [showSetup, setShowSetup] = useState(true);
 
+  // Loads dictionary data and stores it in state
   const loadDict = useCallback(() => {
     setDictLoading(true);
     setDictError(null);
@@ -32,6 +35,7 @@ export default function App() {
       .finally(() => setDictLoading(false));
   }, [setDictionary]);
 
+  // Fetch dictionary on initial mount
   useEffect(() => {
     void loadDict();
   }, [loadDict]);
@@ -65,6 +69,7 @@ export default function App() {
       {!dictLoading && !dictError && (
         <>
           {showSetup ? (
+            // Initial setup modal before starting the game
             <GameSetupModal
               onStart={(opts) => {
                 newGame(opts);

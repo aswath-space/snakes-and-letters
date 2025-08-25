@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
+// Validation helpers under test
 import { validateWord } from '../src/engine/validate';
 import { loadWordlist, hasWord } from '../src/dictionary/loader';
 
