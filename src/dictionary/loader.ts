@@ -6,7 +6,7 @@ function normalize(text: string): Dictionary {
     text
       .split(/\r?\n/)
       .map((w) => w.trim().toLowerCase())
-      .filter(Boolean),
+      .filter((w) => w.length > 1),
   );
 }
 

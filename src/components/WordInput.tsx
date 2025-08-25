@@ -1,13 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { validateWord } from '../engine/validate';
 import { hasWord } from '../dictionary/loader';
+
+// Sound files live under /public/assets/sounds; actual files are not committed.
 
 export default function WordInput() {
   const [word, setWord] = useState('');
   const [useWildcard, setUseWildcard] = useState(false);
   const submitWord = useGameStore((s) => s.submitWord);
   const endTurn = useGameStore((s) => s.endTurn);
+  const muted = useGameStore((s) => s.muted);
+  const moveSound = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    // Placeholder path; ensure move.wav is added under public/assets/sounds.
+    moveSound.current = new Audio('/assets/sounds/move.wav');
+  }, []);
   const {
     requiredLength,
     startLetter,
@@ -37,6 +45,7 @@ export default function WordInput() {
   const handleSubmit = () => {
     const res = submitWord(word, useWildcard);
     if (res.accepted) {
+      if (!muted) moveSound.current?.play();
       setWord('');
       setUseWildcard(false);
       endTurn();
@@ -46,7 +55,7 @@ export default function WordInput() {
   const canUseWildcard = wildcards[current] > 0;
 
   return (
-    <div className="space-y-2">
+    <div className="p-4 bg-white rounded shadow space-y-2">
       <div className="flex space-x-2 items-center">
         <label htmlFor="word-input" className="sr-only">
           Enter word
@@ -54,7 +63,7 @@ export default function WordInput() {
         <input
           id="word-input"
           type="text"
-          className="border p-1"
+          className="border p-1 rounded"
           value={word}
           onChange={(e) => setWord(e.target.value)}
         />
@@ -69,7 +78,7 @@ export default function WordInput() {
           <span>Wildcard</span>
         </label>
         <button
-          className="border px-2"
+          className="border px-2 bg-primary text-white rounded disabled:opacity-50"
           onClick={handleSubmit}
           disabled={!validation.accepted}
           aria-label="Submit word"
