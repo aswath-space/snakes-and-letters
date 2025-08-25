@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { validateWord } from '../engine/validate';
-import { hasWord } from '../dictionary/loader';
+import { hasWord, suggestWords } from '../dictionary/loader';
 
 export default function WordInput() {
   const [word, setWord] = useState('');
@@ -45,6 +45,13 @@ export default function WordInput() {
 
   const canUseWildcard = wildcards[current] > 0;
 
+  const hints =
+    rules.hints && requiredLength > 0
+      ? suggestWords(dictionary, startLetter, requiredLength, 5).filter((w) =>
+          w.startsWith(word.toLowerCase()),
+        )
+      : [];
+
   return (
     <div className="space-y-2">
       <div className="flex space-x-2 items-center">
@@ -74,6 +81,13 @@ export default function WordInput() {
         <div className="text-sm text-red-500">
           {messages[validation.reason ?? ''] || ''}
         </div>
+      )}
+      {hints.length > 0 && (
+        <ul className="text-sm text-gray-500 flex space-x-2">
+          {hints.map((h) => (
+            <li key={h}>{h}</li>
+          ))}
+        </ul>
       )}
     </div>
   );

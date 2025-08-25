@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { loadWordlist } from '../src/dictionary/loader';
+import { loadWordlist, suggestWords } from '../src/dictionary/loader';
 
 describe('loadWordlist retries', () => {
   it('retries failed fetches and eventually succeeds', async () => {
@@ -27,5 +27,13 @@ describe('loadWordlist retries', () => {
       loadWordlist('/fake', { fetchFn: fetchMock, retries: 1, delayMs: 0 }),
     ).rejects.toThrow(/Unable to load dictionary/);
     expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('suggestWords', () => {
+  it('returns limited suggestions by start letter and length', () => {
+    const dict = new Set(['apple', 'apply', 'apart', 'angle', 'boat']);
+    const res = suggestWords(dict, 'a', 5, 2);
+    expect(res).toEqual(['apple', 'apply']);
   });
 });

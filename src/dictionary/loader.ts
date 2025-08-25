@@ -67,3 +67,25 @@ export async function loadWordlist(
 export function hasWord(dict: Dictionary, word: string): boolean {
   return dict.has(word.toLowerCase());
 }
+
+/**
+ * Returns up to `limit` words that start with `letter` and have the given
+ * `length`. Suggestions are pulled directly from the dictionary in insertion
+ * order and are intended for lightweight hints.
+ */
+export function suggestWords(
+  dict: Dictionary,
+  letter: string,
+  length: number,
+  limit = 5,
+): string[] {
+  const lower = letter.toLowerCase();
+  const suggestions: string[] = [];
+  for (const word of dict) {
+    if (word.length === length && word.startsWith(lower)) {
+      suggestions.push(word);
+      if (suggestions.length >= limit) break;
+    }
+  }
+  return suggestions;
+}

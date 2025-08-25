@@ -29,6 +29,14 @@ export default function ToggleBar() {
         />
         Timer
       </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={rules.hints}
+          onChange={() => setRules({ hints: !rules.hints })}
+        />
+        Hints
+      </label>
     </div>
   );
 }

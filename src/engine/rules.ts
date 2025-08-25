@@ -20,4 +20,5 @@ export const defaultRules: Rules = {
   challengeMode: false,
   noRepeats: false,
   timer: false,
+  hints: false,
 };
