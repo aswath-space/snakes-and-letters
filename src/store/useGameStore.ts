@@ -25,6 +25,7 @@ interface GameState {
   wildcards: Record<PlayerId, number>;
   requiredLength: number;
   dictionary: Dictionary;
+  boardLetters: string[];
   setDictionary(dict: Dictionary): void;
   newGame(rules?: Partial<Rules>): void;
   roll(): void;
@@ -47,6 +48,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   wildcards: { 0: 2, 1: 2 },
   requiredLength: 0,
   dictionary: new Set(),
+  boardLetters: Array(defaultRules.boardSize).fill(''),
   muted: false,
   setDictionary(dict) {
     set({ dictionary: dict });
@@ -72,6 +74,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       usedWords: new Set(),
       wildcards: { 0: 2, 1: 2 },
       requiredLength: 0,
+      boardLetters: Array(merged.boardSize).fill(''),
     });
   },
   roll() {
@@ -106,11 +109,17 @@ export const useGameStore = create<GameState>((set, get) => ({
     newUsed.add(normalized);
     const newWildcards = { ...state.wildcards };
     if (useWildcard) newWildcards[state.current]--;
+    const letters = [...state.boardLetters];
+    for (let i = 0; i < normalized.length; i++) {
+      const idx = state.positions[state.current] + i + 1;
+      if (idx < letters.length) letters[idx] = normalized[i];
+    }
     set({
       positions: { ...state.positions, [state.current]: position },
       startLetter: normalized.at(-1)!,
       usedWords: newUsed,
       wildcards: newWildcards,
+      boardLetters: letters,
     });
     return { accepted: true };
   },
