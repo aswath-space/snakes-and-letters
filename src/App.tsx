@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Board from './components/Board';
 import WordInput from './components/WordInput';
 import HUD from './components/HUD';
+import ModeSummary from './components/ModeSummary';
 import { loadWordlist } from './dictionary/loader';
 import { useGameStore } from './store/useGameStore';
 import GameSetupModal from './components/GameSetupModal';
@@ -64,6 +65,7 @@ export default function App() {
           ) : (
             <>
               <div className="flex gap-4 items-start justify-center">
+                <ModeSummary />
                 <Board />
                 <HUD />
               </div>

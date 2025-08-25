@@ -27,7 +27,7 @@ export default function Cell({ index, positions, letter }: CellProps) {
         key="p2"
         src="/assets/bluepawn.svg"
         alt="P2"
-        className="absolute top-1 right-1 w-4 h-4"
+        className="absolute bottom-1 left-1 w-4 h-4"
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       />,
     );
