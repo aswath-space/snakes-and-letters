@@ -27,7 +27,7 @@ export default function Cell({ index, positions }: CellProps) {
       />,
     );
   return (
-    <div className="relative w-8 h-8 border flex items-center justify-center text-xs">
+    <div className="relative w-full aspect-square border flex items-center justify-center text-xs">
       {index + 1}
       {tokens}
     </div>

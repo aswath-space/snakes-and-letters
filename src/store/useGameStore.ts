@@ -32,6 +32,8 @@ interface GameState {
     useWildcard?: boolean
   ): { accepted: boolean; reason?: string };
   endTurn(): void;
+  muted: boolean;
+  toggleMute(): void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -44,6 +46,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   wildcards: { 0: 2, 1: 2 },
   requiredLength: 0,
   dictionary: new Set(),
+  muted: false,
   setDictionary(dict) {
     set({ dictionary: dict });
   },
@@ -120,5 +123,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
       set({ current: 0, requiredLength: 0 });
     }
+  },
+  toggleMute() {
+    set((s) => ({ muted: !s.muted }));
   },
 }));
