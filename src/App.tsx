@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import Board from './components/Board';
 import WordInput from './components/WordInput';
 import HUD from './components/HUD';
-import ToggleBar from './components/ToggleBar';
 import { loadWordlist } from './dictionary/loader';
 import { useGameStore } from './store/useGameStore';
 import GameSetupModal from './components/GameSetupModal';
+import ModeSummary from './components/ModeSummary';
 
 export default function App() {
   const setDictionary = useGameStore((s) => s.setDictionary);
@@ -64,10 +64,12 @@ export default function App() {
             />
           ) : (
             <>
-              <HUD />
-              <Board />
+              <div className="flex gap-4 items-start justify-center">
+                <ModeSummary />
+                <Board />
+                <HUD />
+              </div>
               <WordInput />
-              <ToggleBar />
             </>
           )}
         </>

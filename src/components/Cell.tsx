@@ -11,26 +11,32 @@ export default function Cell({ index, positions, letter }: CellProps) {
   const tokens: JSX.Element[] = [];
   if (positions[0] === index)
     tokens.push(
-      <motion.span
+      <motion.img
         layoutId="p1"
         key="p1"
-        className="absolute top-1 right-1 w-3 h-3 rounded-full bg-red-500"
+        src="/assets/redpawn.svg"
+        alt="P1"
+        className="absolute top-1 right-1 w-4 h-4"
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       />,
     );
   if (positions[1] === index)
     tokens.push(
-      <motion.span
+      <motion.img
         layoutId="p2"
         key="p2"
-        className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-blue-500"
+        src="/assets/bluepawn.svg"
+        alt="P2"
+        className="absolute bottom-1 right-1 w-4 h-4"
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       />,
     );
   return (
     <div className="relative w-full aspect-square border flex items-center justify-center">
-      <span className="absolute top-1 left-1 text-[0.5rem]">{index + 1}</span>
-      <span className="text-lg">{letter}</span>
+      <span className="absolute top-1 left-1 text-[clamp(0.3rem,1.5vmin,0.75rem)]">
+        {index + 1}
+      </span>
+      <span className="text-[clamp(0.5rem,2vmin,1.25rem)]">{letter}</span>
       {tokens}
     </div>
   );
