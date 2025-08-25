@@ -29,7 +29,7 @@ export default function App() {
     void loadDict();
   }, [loadDict]);
   return (
-    <div className="p-4 space-y-4 max-w-md mx-auto">
+    <div className="p-4 space-y-4 max-w-md mx-auto font-sans bg-background text-primary">
       {dictError && (
         <div
           role="alert"
@@ -41,9 +41,15 @@ export default function App() {
           </button>
         </div>
       )}
-      <HUD />
-      <Board />
-      <WordInput />
+      <div className="bg-surface p-4 rounded shadow">
+        <HUD />
+      </div>
+      <div className="bg-surface p-4 rounded shadow">
+        <Board />
+      </div>
+      <div className="bg-surface p-4 rounded shadow">
+        <WordInput />
+      </div>
       <ToggleBar />
     </div>
   );

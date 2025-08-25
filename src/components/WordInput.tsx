@@ -46,16 +46,17 @@ export default function WordInput() {
   const canUseWildcard = wildcards[current] > 0;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 text-primary font-sans">
       <div className="flex space-x-2 items-center">
         <input
-          className="border p-1"
+          className="border border-primary p-1 rounded"
           value={word}
           onChange={(e) => setWord(e.target.value)}
         />
         <label className="flex items-center space-x-1">
           <input
             type="checkbox"
+            className="accent-secondary"
             checked={useWildcard}
             disabled={!canUseWildcard}
             onChange={() => setUseWildcard(!useWildcard)}
@@ -63,7 +64,7 @@ export default function WordInput() {
           <span>Wildcard</span>
         </label>
         <button
-          className="border px-2"
+          className="px-2 py-1 rounded bg-primary text-white disabled:opacity-50"
           onClick={handleSubmit}
           disabled={!validation.accepted}
         >

@@ -5,7 +5,7 @@ export default function HUD() {
   const { requiredLength, startLetter, wildcards, current, positions } =
     useGameStore();
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 text-primary font-sans">
       <div className="flex items-center space-x-4">
         <Dice />
         <div>Required: {requiredLength || '-'}</div>
