@@ -6,14 +6,21 @@ import { LayoutGroup } from 'framer-motion';
 // Placeholder asset paths: add `snake.svg` and `ladder.svg` under `public/assets`.
 
 export default function Board() {
-  const { positions, rules } = useGameStore();
+  const { positions, rules, boardLetters } = useGameStore();
   const width = Math.round(Math.sqrt(rules.boardSize));
   const cellSize = 100 / width;
   const cells: JSX.Element[] = [];
   for (let row = width - 1; row >= 0; row--) {
     for (let col = 0; col < width; col++) {
       const index = row * width + (row % 2 === 0 ? col : width - 1 - col);
-      cells.push(<Cell key={index} index={index} positions={positions} />);
+      cells.push(
+        <Cell
+          key={index}
+          index={index}
+          positions={positions}
+          letter={boardLetters[index]}
+        />,
+      );
     }
   }
 
@@ -51,7 +58,7 @@ export default function Board() {
 
   return (
     <LayoutGroup>
-      <div className="relative w-full max-w-sm aspect-square mx-auto">
+      <div className="relative w-full max-w-[90vmin] aspect-square mx-auto">
         <div
           className="grid w-full h-full"
           style={{ gridTemplateColumns: `repeat(${width}, 1fr)` }}

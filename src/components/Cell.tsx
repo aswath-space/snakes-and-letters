@@ -4,16 +4,17 @@ import { motion } from 'framer-motion';
 interface CellProps {
   index: number;
   positions: Record<PlayerId, number>;
+  letter?: string;
 }
 
-export default function Cell({ index, positions }: CellProps) {
+export default function Cell({ index, positions, letter }: CellProps) {
   const tokens: JSX.Element[] = [];
   if (positions[0] === index)
     tokens.push(
       <motion.span
         layoutId="p1"
         key="p1"
-        className="absolute top-1 left-1 w-3 h-3 rounded-full bg-red-500"
+        className="absolute top-1 right-1 w-3 h-3 rounded-full bg-red-500"
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       />,
     );
@@ -27,8 +28,9 @@ export default function Cell({ index, positions }: CellProps) {
       />,
     );
   return (
-    <div className="relative w-full aspect-square border flex items-center justify-center text-xs">
-      {index + 1}
+    <div className="relative w-full aspect-square border flex items-center justify-center">
+      <span className="absolute top-1 left-1 text-[0.5rem]">{index + 1}</span>
+      <span className="text-lg">{letter}</span>
       {tokens}
     </div>
   );

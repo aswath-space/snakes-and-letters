@@ -19,7 +19,7 @@ describe('game store', () => {
   it('roll sets required length', () => {
     useGameStore.getState().roll();
     const { lastDie, requiredLength } = useGameStore.getState();
-    expect(lastDie).toBeGreaterThanOrEqual(1);
+    expect(lastDie).toBeGreaterThanOrEqual(3);
     expect(lastDie).toBeLessThanOrEqual(6);
     expect(requiredLength).toBe(lastDie);
   });

@@ -11,6 +11,6 @@ export class RNG {
 
 export function rollDie(rng?: RNG): number {
   const r = rng ? rng.next() : Math.random();
-  // Die now ranges 2-6 to avoid one-letter rounds
-  return Math.floor(r * 5) + 2;
+  // Die now ranges 3-6 to avoid one- or two-letter rounds
+  return Math.floor(r * 4) + 3;
 }

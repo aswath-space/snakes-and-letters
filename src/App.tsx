@@ -5,11 +5,14 @@ import HUD from './components/HUD';
 import ToggleBar from './components/ToggleBar';
 import { loadWordlist } from './dictionary/loader';
 import { useGameStore } from './store/useGameStore';
+import GameSetupModal from './components/GameSetupModal';
 
 export default function App() {
   const setDictionary = useGameStore((s) => s.setDictionary);
+  const newGame = useGameStore((s) => s.newGame);
   const [dictError, setDictError] = useState<string | null>(null);
   const [dictLoading, setDictLoading] = useState(true);
+  const [showSetup, setShowSetup] = useState(true);
 
   const loadDict = useCallback(() => {
     setDictLoading(true);
@@ -33,7 +36,7 @@ export default function App() {
   }, [loadDict]);
 
   return (
-    <div className="p-4 space-y-4 max-w-md mx-auto">
+    <div className="p-4 space-y-4 mx-auto">
       {dictLoading && (
         <div role="status" className="text-center">
           Loading dictionary...
@@ -52,10 +55,21 @@ export default function App() {
       )}
       {!dictLoading && !dictError && (
         <>
-          <HUD />
-          <Board />
-          <WordInput />
-          <ToggleBar />
+          {showSetup ? (
+            <GameSetupModal
+              onStart={(opts) => {
+                newGame(opts);
+                setShowSetup(false);
+              }}
+            />
+          ) : (
+            <>
+              <HUD />
+              <Board />
+              <WordInput />
+              <ToggleBar />
+            </>
+          )}
         </>
       )}
     </div>
