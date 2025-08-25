@@ -5,6 +5,7 @@ import {
   defaultRules,
   resolveSnakesAndLadders,
   clampIndex,
+  generateSnakesAndLadders,
 } from '../engine';
 import { rollDie } from '../engine/dice';
 import { validateWord, normalize } from '../engine/validate';
@@ -51,8 +52,19 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ dictionary: dict });
   },
   newGame(rules) {
+    const merged: Rules = { ...defaultRules, ...rules };
+    if (
+      rules?.boardSize &&
+      rules.boardSize !== defaultRules.boardSize &&
+      !rules.snakes &&
+      !rules.ladders
+    ) {
+      const generated = generateSnakesAndLadders(rules.boardSize);
+      merged.snakes = generated.snakes;
+      merged.ladders = generated.ladders;
+    }
     set({
-      rules: { ...defaultRules, ...rules },
+      rules: merged,
       positions: { 0: 0, 1: 0 },
       current: 0,
       lastDie: 0,

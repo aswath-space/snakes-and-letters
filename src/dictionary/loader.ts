@@ -67,3 +67,20 @@ export async function loadWordlist(
 export function hasWord(dict: Dictionary, word: string): boolean {
   return dict.has(word.toLowerCase());
 }
+
+export function getHints(
+  dict: Dictionary,
+  startLetter: string,
+  length: number,
+  limit = 5,
+): string[] {
+  const lower = startLetter.toLowerCase();
+  const hints: string[] = [];
+  for (const word of dict) {
+    if (word.length === length && word.startsWith(lower)) {
+      hints.push(word);
+      if (hints.length >= limit) break;
+    }
+  }
+  return hints;
+}
