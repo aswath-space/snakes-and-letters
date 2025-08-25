@@ -1,6 +1,8 @@
-import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 import { useGameStore } from '../src/store/useGameStore';
 import { loadWordlist } from '../src/dictionary/loader';
+import * as diceModule from '../src/engine/dice';
+import * as aiModule from '../src/engine/ai';
 
 let dict: Set<string>;
 
@@ -60,5 +62,21 @@ describe('game store', () => {
   it('endTurn switches player', () => {
     useGameStore.getState().endTurn();
     expect(useGameStore.getState().current).toBe(1);
+  });
+
+  it('AI plays automatically in single mode', () => {
+    useGameStore.getState().newGame({ mode: 'single' });
+    useGameStore.setState({ dictionary: dict, startLetter: 'a' });
+    const rollSpy = vi.spyOn(diceModule, 'rollDie').mockReturnValue(5);
+    const aiSpy = vi
+      .spyOn(aiModule, 'chooseRandomWord')
+      .mockReturnValue('apple');
+    useGameStore.getState().endTurn();
+    expect(aiSpy).toHaveBeenCalled();
+    expect(useGameStore.getState().positions[1]).toBe(5);
+    expect(useGameStore.getState().startLetter).toBe('e');
+    expect(useGameStore.getState().current).toBe(0);
+    rollSpy.mockRestore();
+    aiSpy.mockRestore();
   });
 });
