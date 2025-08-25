@@ -70,6 +70,20 @@ describe('game store', () => {
     expect(useGameStore.getState().current).toBe(0);
   });
 
+  it('identifies winner and prevents further moves', () => {
+    useGameStore.getState().newGame({ boardSize: 10, snakes: [], ladders: [] });
+    useGameStore.setState({ dictionary: dict, requiredLength: 9, startLetter: 'a' });
+    const res = useGameStore.getState().submitWord('aardvarks');
+    expect(res.accepted).toBe(true);
+    const state = useGameStore.getState();
+    expect(state.positions[0]).toBe(9);
+    expect(state.winner).toBe(0);
+    useGameStore.getState().roll();
+    expect(useGameStore.getState().lastDie).toBe(0);
+    useGameStore.getState().endTurn();
+    expect(useGameStore.getState().current).toBe(0);
+  });
+
   it('AI plays automatically in bot mode', () => {
     useGameStore.getState().newGame({ mode: 'bot' });
     useGameStore.setState({ dictionary: dict, startLetter: 'a' });

@@ -10,6 +10,7 @@ import GameSetupModal from './components/GameSetupModal';
 export default function App() {
   const setDictionary = useGameStore((s) => s.setDictionary);
   const newGame = useGameStore((s) => s.newGame);
+  const winner = useGameStore((s) => s.winner);
   const [dictError, setDictError] = useState<string | null>(null);
   const [dictLoading, setDictLoading] = useState(true);
   const [showSetup, setShowSetup] = useState(true);
@@ -51,6 +52,14 @@ export default function App() {
           <button className="underline" onClick={loadDict} type="button">
             Retry
           </button>
+        </div>
+      )}
+      {winner !== null && (
+        <div
+          role="status"
+          className="p-2 bg-green-100 border border-green-400 text-green-700 text-center rounded"
+        >
+          Player {winner + 1} wins!
         </div>
       )}
       {!dictLoading && !dictError && (
