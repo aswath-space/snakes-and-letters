@@ -29,7 +29,7 @@ export default function App() {
     void loadDict();
   }, [loadDict]);
   return (
-    <div className="p-4 space-y-4 max-w-md mx-auto">
+    <div className="p-4 space-y-4 max-w-4xl mx-auto">
       {dictError && (
         <div
           role="alert"
@@ -41,9 +41,11 @@ export default function App() {
           </button>
         </div>
       )}
-      <HUD />
-      <Board />
-      <WordInput />
+      <div className="flex flex-col items-center gap-4 md:flex-row md:items-start md:justify-center">
+        <HUD />
+        <Board />
+        <WordInput />
+      </div>
       <ToggleBar />
     </div>
   );

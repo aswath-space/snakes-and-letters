@@ -2,8 +2,6 @@ import { useGameStore } from '../store/useGameStore';
 import Cell from './Cell';
 import { indexToPosition } from '../engine/board';
 
-const CELL_SIZE = 32; // w-8 = 2rem ~32px
-
 export default function Board() {
   const { positions, rules } = useGameStore();
   const cells: JSX.Element[] = [];
@@ -20,10 +18,10 @@ export default function Board() {
   ].map((item, i) => {
     const from = indexToPosition(item.from, rules.boardSize);
     const to = indexToPosition(item.to, rules.boardSize);
-    const x1 = from.col * CELL_SIZE + CELL_SIZE / 2;
-    const y1 = (9 - from.row) * CELL_SIZE + CELL_SIZE / 2;
-    const x2 = to.col * CELL_SIZE + CELL_SIZE / 2;
-    const y2 = (9 - to.row) * CELL_SIZE + CELL_SIZE / 2;
+    const x1 = from.col + 0.5;
+    const y1 = 9 - from.row + 0.5;
+    const x2 = to.col + 0.5;
+    const y2 = 9 - to.row + 0.5;
     return (
       <line
         key={i}
@@ -32,16 +30,19 @@ export default function Board() {
         x2={x2}
         y2={y2}
         stroke={item.color}
-        strokeWidth={4}
+        strokeWidth={0.2}
         strokeLinecap="round"
       />
     );
   });
 
   return (
-    <div className="relative w-80 h-80">
+    <div className="relative w-full aspect-square max-w-sm">
       <div className="grid grid-cols-10 w-full h-full">{cells}</div>
-      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        viewBox="0 0 10 10"
+      >
         {lines}
       </svg>
     </div>
