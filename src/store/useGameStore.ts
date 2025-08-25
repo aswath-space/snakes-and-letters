@@ -26,6 +26,7 @@ interface GameState {
   requiredLength: number;
   dictionary: Dictionary;
   boardLetters: string[];
+  winner: PlayerId | null;
   setDictionary(dict: Dictionary): void;
   newGame(rules?: Partial<Rules>): void;
   roll(): void;
@@ -49,6 +50,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   requiredLength: 0,
   dictionary: new Set(),
   boardLetters: Array(defaultRules.boardSize).fill(''),
+  winner: null,
   muted: false,
   setDictionary(dict) {
     set({ dictionary: dict });
@@ -75,14 +77,19 @@ export const useGameStore = create<GameState>((set, get) => ({
       wildcards: { 0: 2, 1: 2 },
       requiredLength: 0,
       boardLetters: Array(merged.boardSize).fill(''),
+      winner: null,
     });
   },
   roll() {
+    if (get().winner !== null) return;
     const die = rollDie();
     set({ lastDie: die, requiredLength: die });
   },
   submitWord(word, useWildcard = false) {
     const state = get();
+    if (state.winner !== null) {
+      return { accepted: false, reason: 'game-over' };
+    }
     const normalized = normalize(word);
     const validation = validateWord(normalized, {
       length: state.requiredLength,
@@ -114,17 +121,22 @@ export const useGameStore = create<GameState>((set, get) => ({
       const idx = state.positions[state.current] + i + 1;
       if (idx < letters.length) letters[idx] = normalized[i];
     }
+    const win = position === state.rules.boardSize - 1;
     set({
       positions: { ...state.positions, [state.current]: position },
       startLetter: normalized.at(-1)!,
       usedWords: newUsed,
       wildcards: newWildcards,
       boardLetters: letters,
+      ...(win ? { winner: state.current } : {}),
     });
     return { accepted: true };
   },
   endTurn() {
     const state = get();
+    if (state.winner !== null) {
+      return;
+    }
     if (state.rules.mode === 'zen') {
       set({ requiredLength: 0 });
       return;
