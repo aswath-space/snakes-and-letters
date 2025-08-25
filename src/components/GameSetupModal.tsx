@@ -20,7 +20,7 @@ export default function GameSetupModal({ onStart }: Props) {
   const [mode, setMode] = useState<'single' | 'multi'>('multi');
 
   return (
-    <div className="fixed inset-0 flex items-start justify-start bg-black/50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50">
       <div className="bg-white p-4 m-4 rounded shadow w-64 space-y-4">
         <h2 className="text-lg font-bold">Game Setup</h2>
         <label className="block text-sm">
@@ -60,7 +60,7 @@ export default function GameSetupModal({ onStart }: Props) {
           Timer
         </label>
         <div className="text-sm space-y-1">
-          <div>Mode</div>
+          <div>Players</div>
           <label className="flex items-center gap-2">
             <input
               type="radio"
