@@ -10,7 +10,7 @@ interface BoardProps {
 }
 
 export default function Board({ boardRef }: BoardProps) {
-  const { positions, rules, boardLetters } = useGameStore();
+  const { positions, rules, boardLetters, current } = useGameStore();
   const width = Math.round(Math.sqrt(rules.boardSize));
   const cellSize = 100 / width;
   const cells: JSX.Element[] = [];
@@ -23,6 +23,7 @@ export default function Board({ boardRef }: BoardProps) {
           key={index}
           index={index}
           positions={positions}
+          current={current}
           letter={boardLetters[index]}
           mode={rules.mode}
           boardWidth={width}

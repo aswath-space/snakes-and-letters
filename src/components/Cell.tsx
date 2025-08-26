@@ -6,14 +6,16 @@ import type { Rules } from '../engine';
 interface CellProps {
   index: number;
   positions: Record<PlayerId, number>;
+  current: PlayerId;
   letter?: string;
   mode: Rules['mode'];
   boardWidth: number;
 }
 
-export default function Cell({ index, positions, letter, mode, boardWidth }: CellProps) {
+export default function Cell({ index, positions, current, letter, mode, boardWidth }: CellProps) {
   const tokens: JSX.Element[] = [];
   const unit = 90 / boardWidth; // vmin per cell
+  const isCurrent = index === positions[current];
 
   // Render player one token if on this cell
   if (positions[0] === index) {
@@ -56,7 +58,11 @@ export default function Cell({ index, positions, letter, mode, boardWidth }: Cel
   }
 
   return (
-    <div className="relative w-full aspect-square border flex items-center justify-center">
+    <div
+      className={`relative w-full aspect-square border flex items-center justify-center ${
+        isCurrent ? 'bg-yellow-100 ring-4 ring-yellow-400' : ''
+      }`}
+    >
       <span
         className="absolute"
         style={{
