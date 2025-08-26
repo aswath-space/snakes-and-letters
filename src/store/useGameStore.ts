@@ -88,6 +88,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       winner: null,
       remainingTime: 0,
     });
+    get().roll();
   },
   // Roll the die to determine required word length
   roll() {
@@ -124,7 +125,14 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
       return validation;
     }
-    let position = state.positions[state.current] + normalized.length;
+    const move = normalized.length - 1;
+    const remaining =
+      state.rules.boardSize - 1 - state.positions[state.current];
+    if (move > remaining) {
+      get().endTurn();
+      return { accepted: false, reason: 'overshoot' };
+    }
+    let position = state.positions[state.current] + move;
     position = clampIndex(position, state.rules.boardSize);
     position = resolveSnakesAndLadders(position, state.rules);
     const newUsed = new Set(state.usedWords);
@@ -133,7 +141,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (useWildcard) newWildcards[state.current]--;
     const letters = [...state.boardLetters];
     for (let i = 0; i < normalized.length; i++) {
-      const idx = state.positions[state.current] + i + 1;
+      const idx = state.positions[state.current] + i;
       if (idx < letters.length) letters[idx] = normalized[i];
     }
     const win = position === state.rules.boardSize - 1;
@@ -157,13 +165,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       set({ requiredLength: 0, remainingTime: 0 });
       return;
     }
-    set({
-      current: state.current === 0 ? 1 : 0,
-      requiredLength: 0,
-      remainingTime: 0,
-    });
-    const after = get();
-    if (after.rules.mode === 'bot' && after.current === 1) {
+    const next = state.current === 0 ? 1 : 0;
+    set({ current: next, requiredLength: 0, remainingTime: 0 });
+    if (state.rules.mode === 'bot' && next === 1) {
       get().roll();
       const aiState = get();
       const word = chooseRandomWord({
@@ -177,6 +181,9 @@ export const useGameStore = create<GameState>((set, get) => ({
         get().submitWord(word);
       }
       set({ current: 0, requiredLength: 0, remainingTime: 0 });
+      get().roll();
+    } else {
+      get().roll();
     }
   },
   decrementTimer() {

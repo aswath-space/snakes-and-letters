@@ -29,7 +29,7 @@ describe('game store', () => {
     useGameStore.setState({ requiredLength: 5 });
     const res = useGameStore.getState().submitWord('apple');
     expect(res.accepted).toBe(true);
-    expect(useGameStore.getState().positions[0]).toBe(5);
+    expect(useGameStore.getState().positions[0]).toBe(4);
     expect(useGameStore.getState().startLetter).toBe('e');
   });
 
@@ -73,14 +73,19 @@ describe('game store', () => {
 
   it('identifies winner and prevents further moves', () => {
     useGameStore.getState().newGame({ boardSize: 10, snakes: [], ladders: [] });
-    useGameStore.setState({ dictionary: dict, requiredLength: 9, startLetter: 'a' });
-    const res = useGameStore.getState().submitWord('aardvarks');
+    useGameStore.setState({
+      dictionary: dict,
+      requiredLength: 10,
+      startLetter: 'a',
+    });
+    const res = useGameStore.getState().submitWord('abandoning');
     expect(res.accepted).toBe(true);
     const state = useGameStore.getState();
     expect(state.positions[0]).toBe(9);
     expect(state.winner).toBe(0);
+    const prev = useGameStore.getState().lastDie;
     useGameStore.getState().roll();
-    expect(useGameStore.getState().lastDie).toBe(0);
+    expect(useGameStore.getState().lastDie).toBe(prev);
     useGameStore.getState().endTurn();
     expect(useGameStore.getState().current).toBe(0);
   });
@@ -94,7 +99,7 @@ describe('game store', () => {
       .mockReturnValue('apple');
     useGameStore.getState().endTurn();
     expect(aiSpy).toHaveBeenCalled();
-    expect(useGameStore.getState().positions[1]).toBe(5);
+    expect(useGameStore.getState().positions[1]).toBe(4);
     expect(useGameStore.getState().startLetter).toBe('e');
     expect(useGameStore.getState().current).toBe(0);
     rollSpy.mockRestore();

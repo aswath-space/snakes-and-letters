@@ -9,7 +9,6 @@ export default function HUD() {
     startLetter,
     wildcards,
     current,
-    positions,
     rules,
     remainingTime,
   } = useGameStore();
@@ -38,16 +37,6 @@ export default function HUD() {
       <div>Current: {rules.mode === 'zen' ? 'P1' : `P${current + 1}`}</div>
       <div>Wildcards: {wildcards[current]}</div>
       {rules.timer && <div>Time: {remainingTime || '-'}</div>}
-      <div className="pt-2">
-        <div className={current === 0 ? 'font-bold' : ''}>
-          P1: {positions[0]}
-        </div>
-        {rules.mode !== 'zen' && (
-          <div className={current === 1 ? 'font-bold' : ''}>
-            P2: {positions[1]}
-          </div>
-        )}
-      </div>
     </div>
   );
 }
