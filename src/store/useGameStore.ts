@@ -47,7 +47,7 @@ interface GameState {
 
 export const useGameStore = create<GameState>((set, get) => ({
   rules: defaultRules,
-  positions: { 0: 0, 1: 0 },
+  positions: { 0: -1, 1: -1 },
   current: 0,
   lastDie: 0,
   startLetter: String.fromCharCode(97 + Math.floor(Math.random() * 26)),
@@ -77,7 +77,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
     set({
       rules: merged,
-      positions: { 0: 0, 1: 0 },
+      positions: { 0: -1, 1: -1 },
       current: 0,
       lastDie: 0,
       startLetter: String.fromCharCode(97 + Math.floor(Math.random() * 26)),
@@ -118,15 +118,16 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (!validation.accepted) {
       if (state.rules.challengeMode) {
         let pos = state.positions[state.current] - state.lastDie;
-        pos = clampIndex(pos, state.rules.boardSize);
+        pos = Math.max(pos, -1);
         set({
           positions: { ...state.positions, [state.current]: pos },
         });
       }
       return validation;
     }
-    // Move forward by the full length of the accepted word. The board is
-    // zero-indexed, so a five-letter word moves the player from cell 0 to 5.
+    // Move forward by the full length of the accepted word. Players start
+    // off-board at index -1, so a five-letter word lands on cell 4
+    // (the board itself remains zero-indexed).
     const move = normalized.length;
     const remaining =
       state.rules.boardSize - 1 - state.positions[state.current];

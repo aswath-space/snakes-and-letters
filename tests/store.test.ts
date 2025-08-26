@@ -29,7 +29,7 @@ describe('game store', () => {
     useGameStore.setState({ requiredLength: 5 });
     const res = useGameStore.getState().submitWord('apple');
     expect(res.accepted).toBe(true);
-    expect(useGameStore.getState().positions[0]).toBe(5);
+    expect(useGameStore.getState().positions[0]).toBe(4);
     expect(useGameStore.getState().startLetter).toBe('e');
   });
 
@@ -44,7 +44,7 @@ describe('game store', () => {
     useGameStore.setState({ requiredLength: 5, startLetter: 'a' });
     const res = useGameStore.getState().submitWord('bread');
     expect(res.accepted).toBe(false);
-    expect(useGameStore.getState().positions[0]).toBe(0);
+    expect(useGameStore.getState().positions[0]).toBe(-1);
   });
 
   it('challenge mode moves back on invalid', () => {
@@ -75,10 +75,10 @@ describe('game store', () => {
     useGameStore.getState().newGame({ boardSize: 10, snakes: [], ladders: [] });
     useGameStore.setState({
       dictionary: dict,
-      requiredLength: 9,
+      requiredLength: 10,
       startLetter: 'a',
     });
-    const res = useGameStore.getState().submitWord('abandoned');
+    const res = useGameStore.getState().submitWord('abandoning');
     expect(res.accepted).toBe(true);
     const state = useGameStore.getState();
     expect(state.positions[0]).toBe(9);
@@ -99,7 +99,7 @@ describe('game store', () => {
       .mockReturnValue('apple');
     useGameStore.getState().endTurn();
     expect(aiSpy).toHaveBeenCalled();
-    expect(useGameStore.getState().positions[1]).toBe(5);
+    expect(useGameStore.getState().positions[1]).toBe(4);
     expect(useGameStore.getState().startLetter).toBe('e');
     expect(useGameStore.getState().current).toBe(0);
     rollSpy.mockRestore();
