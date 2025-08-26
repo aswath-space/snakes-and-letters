@@ -78,43 +78,78 @@ export default function Board({ boardRef }: BoardProps) {
       return elements;
     }
 
-    // Ladder with vertical rails and horizontal rungs
-    const thickness = cellSize * 0.3;
+    // Ladder with separate rails and rungs drawn as SVG lines
+    const railSpacing = cellSize * 0.5;
+    const railWidth = cellSize * 0.1;
     const stepCount = Math.max(2, Math.floor(length / cellSize));
+    const angleRad = Math.atan2(dy, dx);
+    const ux = Math.cos(angleRad);
+    const uy = Math.sin(angleRad);
+    const px = -uy;
+    const py = ux;
+
+    const startX = x;
+    const startY = y;
+    const endX = x + ux * length;
+    const endY = y + uy * length;
+
+    const r1sx = startX + px * (railSpacing / 2);
+    const r1sy = startY + py * (railSpacing / 2);
+    const r1ex = endX + px * (railSpacing / 2);
+    const r1ey = endY + py * (railSpacing / 2);
+
+    const r2sx = startX - px * (railSpacing / 2);
+    const r2sy = startY - py * (railSpacing / 2);
+    const r2ex = endX - px * (railSpacing / 2);
+    const r2ey = endY - py * (railSpacing / 2);
+
     return (
-      <div
+      <svg
         key={`ladder-${i}`}
-        className="absolute pointer-events-none"
-        style={{
-          left: `${x}%`,
-          top: `${y}%`,
-          width: `${thickness}%`,
-          height: `${length}%`,
-          transform: `translateX(-50%) rotate(${angle}deg)`,
-          transformOrigin: '50% 0%',
-        }}
+        className="absolute inset-0 pointer-events-none"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
       >
-        <span
-          className="absolute bg-yellow-500"
-          style={{ top: 0, bottom: 0, left: 0, width: '30%' }}
+        <line
+          x1={r1sx}
+          y1={r1sy}
+          x2={r1ex}
+          y2={r1ey}
+          stroke="#eab308"
+          strokeWidth={railWidth}
+          strokeLinecap="round"
         />
-        <span
-          className="absolute bg-yellow-500"
-          style={{ top: 0, bottom: 0, right: 0, width: '30%' }}
+        <line
+          x1={r2sx}
+          y1={r2sy}
+          x2={r2ex}
+          y2={r2ey}
+          stroke="#eab308"
+          strokeWidth={railWidth}
+          strokeLinecap="round"
         />
-        {Array.from({ length: stepCount }).map((_, j) => (
-          <span
-            key={j}
-            className="absolute bg-yellow-500"
-            style={{
-              left: 0,
-              right: 0,
-              height: '20%',
-              top: `${((j + 1) / (stepCount + 1)) * 100}%`,
-            }}
-          />
-        ))}
-      </div>
+        {Array.from({ length: stepCount }).map((_, j) => {
+          const t = (j + 1) / (stepCount + 1);
+          const cx = startX + ux * length * t;
+          const cy = startY + uy * length * t;
+          const rsx = cx + px * (railSpacing / 2);
+          const rsy = cy + py * (railSpacing / 2);
+          const rex = cx - px * (railSpacing / 2);
+          const rey = cy - py * (railSpacing / 2);
+          return (
+            <line
+              key={j}
+              x1={rsx}
+              y1={rsy}
+              x2={rex}
+              y2={rey}
+              stroke="#eab308"
+              strokeWidth={railWidth}
+              strokeLinecap="round"
+            />
+          );
+        })}
+      </svg>
     );
   });
 
