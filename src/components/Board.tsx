@@ -3,8 +3,13 @@ import { useGameStore } from '../store/useGameStore';
 import Cell from './Cell';
 import { indexToPosition } from '../engine/board';
 import { LayoutGroup } from 'framer-motion';
+import type { Ref } from 'react';
 
-export default function Board() {
+interface BoardProps {
+  boardRef?: Ref<HTMLDivElement>;
+}
+
+export default function Board({ boardRef }: BoardProps) {
   const { positions, rules, boardLetters } = useGameStore();
   const width = Math.round(Math.sqrt(rules.boardSize));
   const cellSize = 100 / width;
@@ -20,16 +25,17 @@ export default function Board() {
           positions={positions}
           letter={boardLetters[index]}
           mode={rules.mode}
+          boardWidth={width}
         />,
       );
     }
   }
 
-  // Merge snakes and ladders into decorative lines on the board
+  // Decorative snakes and ladders
   const decorations = [
-    ...rules.snakes.map((s) => ({ ...s, type: 'snake' })),
-    ...rules.ladders.map((l) => ({ ...l, type: 'ladder' })),
-  ].map((item, i) => {
+    ...rules.snakes.map((s) => ({ ...s, type: 'snake' as const })),
+    ...rules.ladders.map((l) => ({ ...l, type: 'ladder' as const })),
+  ].flatMap((item, i) => {
     const from = indexToPosition(item.from, rules.boardSize);
     const to = indexToPosition(item.to, rules.boardSize);
     const dx = (to.col - from.col) * cellSize;
@@ -38,25 +44,85 @@ export default function Board() {
     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
     const x = from.col * cellSize + cellSize / 2;
     const y = (width - 1 - from.row) * cellSize + cellSize / 2;
-    const color = item.type === 'snake' ? 'bg-green-600' : 'bg-yellow-500';
+
+    if (item.type === 'snake') {
+      const elements = [
+        <div
+          key={`snake-${i}`}
+          className="absolute pointer-events-none bg-green-600"
+          style={{
+            left: `${x}%`,
+            top: `${y}%`,
+            width: `${length}%`,
+            height: `${cellSize * 0.2}%`,
+            transform: `translateY(-50%) rotate(${angle}deg)`,
+            transformOrigin: '0% 50%',
+          }}
+        />,
+      ];
+      // Add a simple eye at the snake's head
+      const eyeSize = cellSize * 0.2;
+      elements.push(
+        <div
+          key={`snake-eye-${i}`}
+          className="absolute pointer-events-none bg-black rounded-full"
+          style={{
+            width: `${eyeSize}%`,
+            height: `${eyeSize}%`,
+            left: `calc(${x}% - ${eyeSize / 2}%)`,
+            top: `calc(${y}% - ${eyeSize / 2}%)`,
+          }}
+        />,
+      );
+      return elements;
+    }
+
+    // Ladder with rails and rungs
+    const thickness = cellSize * 0.3;
+    const stepCount = Math.max(2, Math.floor(length / cellSize));
     return (
       <div
-        key={i}
-        className={`absolute pointer-events-none ${color} h-2`}
+        key={`ladder-${i}`}
+        className="absolute pointer-events-none"
         style={{
           left: `${x}%`,
           top: `${y}%`,
           width: `${length}%`,
+          height: `${thickness}%`,
           transform: `translateY(-50%) rotate(${angle}deg)`,
           transformOrigin: '0% 50%',
         }}
-      />
+      >
+        <span
+          className="absolute bg-yellow-500"
+          style={{ left: 0, top: 0, bottom: 0, width: '20%' }}
+        />
+        <span
+          className="absolute bg-yellow-500"
+          style={{ right: 0, top: 0, bottom: 0, width: '20%' }}
+        />
+        {Array.from({ length: stepCount }).map((_, j) => (
+          <span
+            key={j}
+            className="absolute bg-yellow-500"
+            style={{
+              left: 0,
+              right: 0,
+              height: '20%',
+              top: `${((j + 1) / (stepCount + 1)) * 100}%`,
+            }}
+          />
+        ))}
+      </div>
     );
   });
 
   return (
     <LayoutGroup>
-      <div className="relative w-full max-w-[90vmin] aspect-square mx-auto">
+      <div
+        ref={boardRef}
+        className="relative w-full max-w-[90vmin] aspect-square mx-auto"
+      >
         <div
           className="grid w-full h-full"
           style={{ gridTemplateColumns: `repeat(${width}, 1fr)` }}
