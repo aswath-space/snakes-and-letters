@@ -122,15 +122,17 @@ export default function Board({ boardRef }: BoardProps) {
     <LayoutGroup>
       <div
         ref={boardRef}
-        className="relative w-full max-w-[90vmin] aspect-square mx-auto"
+        className="relative overflow-hidden w-full max-w-[90vmin] aspect-square mx-auto"
       >
+        <div className="absolute inset-0 pointer-events-none z-0">
+          {decorations}
+        </div>
         <div
-          className="grid w-full h-full"
+          className="relative z-10 grid w-full h-full"
           style={{ gridTemplateColumns: `repeat(${width}, 1fr)` }}
         >
           {cells}
         </div>
-        {decorations}
       </div>
     </LayoutGroup>
   );
