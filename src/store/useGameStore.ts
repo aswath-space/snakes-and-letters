@@ -14,6 +14,8 @@ import { chooseRandomWord } from '../engine/ai';
 import { hasWord } from '../dictionary/loader';
 import type { Dictionary } from '../dictionary/loader';
 
+const TURN_TIME = 30; // seconds per turn when timer is enabled
+
 export type PlayerId = 0 | 1;
 
 // State and actions managed by Zustand
@@ -29,6 +31,8 @@ interface GameState {
   dictionary: Dictionary;
   boardLetters: string[];
   winner: PlayerId | null;
+  remainingTime: number;
+  decrementTimer(): void;
   setDictionary(dict: Dictionary): void;
   newGame(rules?: Partial<Rules>): void;
   roll(): void;
@@ -53,6 +57,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   dictionary: new Set(),
   boardLetters: Array(defaultRules.boardSize).fill(''),
   winner: null,
+  remainingTime: 0,
   muted: false,
   setDictionary(dict) {
     set({ dictionary: dict });
@@ -81,13 +86,18 @@ export const useGameStore = create<GameState>((set, get) => ({
       requiredLength: 0,
       boardLetters: Array(merged.boardSize).fill(''),
       winner: null,
+      remainingTime: 0,
     });
   },
   // Roll the die to determine required word length
   roll() {
     if (get().winner !== null) return;
     const die = rollDie();
-    set({ lastDie: die, requiredLength: die });
+    set({
+      lastDie: die,
+      requiredLength: die,
+      remainingTime: get().rules.timer ? TURN_TIME : 0,
+    });
   },
   // Validate and apply a submitted word
   submitWord(word, useWildcard = false) {
@@ -144,10 +154,14 @@ export const useGameStore = create<GameState>((set, get) => ({
       return;
     }
     if (state.rules.mode === 'zen') {
-      set({ requiredLength: 0 });
+      set({ requiredLength: 0, remainingTime: 0 });
       return;
     }
-    set({ current: state.current === 0 ? 1 : 0, requiredLength: 0 });
+    set({
+      current: state.current === 0 ? 1 : 0,
+      requiredLength: 0,
+      remainingTime: 0,
+    });
     const after = get();
     if (after.rules.mode === 'bot' && after.current === 1) {
       get().roll();
@@ -162,8 +176,12 @@ export const useGameStore = create<GameState>((set, get) => ({
       if (word) {
         get().submitWord(word);
       }
-      set({ current: 0, requiredLength: 0 });
+      set({ current: 0, requiredLength: 0, remainingTime: 0 });
     }
+  },
+  decrementTimer() {
+    const t = get().remainingTime;
+    if (t > 0) set({ remainingTime: t - 1 });
   },
   // Toggle sound effects on/off
   toggleMute() {
