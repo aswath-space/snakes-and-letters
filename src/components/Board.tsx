@@ -42,40 +42,69 @@ export default function Board({ boardRef }: BoardProps) {
     const dx = (to.col - from.col) * cellSize;
     const dy = (from.row - to.row) * cellSize;
     const length = Math.sqrt(dx * dx + dy * dy);
-    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
     const x = from.col * cellSize + cellSize / 2;
     const y = (width - 1 - from.row) * cellSize + cellSize / 2;
 
     if (item.type === 'snake') {
-      const elements = [
-        <div
+      const startX = x;
+      const startY = y;
+      const endX = x + dx;
+      const endY = y + dy;
+      const strokeWidth = cellSize * 0.15;
+
+      return (
+        <svg
           key={`snake-${i}`}
-          className="absolute pointer-events-none bg-green-600"
-          style={{
-            left: `${x}%`,
-            top: `${y}%`,
-            width: `${length}%`,
-            height: `${cellSize * 0.2}%`,
-            transform: `translateY(-50%) rotate(${angle}deg)`,
-            transformOrigin: '0% 50%',
-          }}
-        />,
-      ];
-      // Add a simple eye at the snake's head
-      const eyeSize = cellSize * 0.2;
-      elements.push(
-        <div
-          key={`snake-eye-${i}`}
-          className="absolute pointer-events-none bg-black rounded-full"
-          style={{
-            width: `${eyeSize}%`,
-            height: `${eyeSize}%`,
-            left: `calc(${x}% - ${eyeSize / 2}%)`,
-            top: `calc(${y}% - ${eyeSize / 2}%)`,
-          }}
-        />,
+          className="absolute inset-0 pointer-events-none"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient
+              id={`snake-gradient-${i}`}
+              gradientUnits="userSpaceOnUse"
+              x1={startX}
+              y1={startY}
+              x2={endX}
+              y2={endY}
+            >
+              <stop offset="0%" stopColor="#4ade80" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#15803d" stopOpacity="0.6" />
+            </linearGradient>
+            <marker
+              id={`snake-head-${i}`}
+              markerWidth="4"
+              markerHeight="4"
+              refX="2"
+              refY="2"
+              orient="auto"
+            >
+              <polygon points="0,0 4,2 0,4" fill="#15803d" fillOpacity="0.8" />
+            </marker>
+            <marker
+              id={`snake-tail-${i}`}
+              markerWidth="4"
+              markerHeight="4"
+              refX="2"
+              refY="2"
+              orient="auto"
+            >
+              <circle cx="2" cy="2" r="1.5" fill="#4ade80" fillOpacity="0.8" />
+            </marker>
+          </defs>
+          <line
+            x1={startX}
+            y1={startY}
+            x2={endX}
+            y2={endY}
+            stroke={`url(#snake-gradient-${i})`}
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            markerStart={`url(#snake-tail-${i})`}
+            markerEnd={`url(#snake-head-${i})`}
+          />
+        </svg>
       );
-      return elements;
     }
 
     // Ladder with separate rails and rungs drawn as SVG lines
