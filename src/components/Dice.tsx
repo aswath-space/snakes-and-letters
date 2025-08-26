@@ -1,43 +1,50 @@
-// Visual dice component that can be rolled to produce a value
-import { useEffect, useRef } from 'react';
+// Visual dice component that displays the current roll
+import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 
 const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 
-// Sound files live under /public/assets/sounds; actual files are not committed.
-
-interface DiceProps {
-  value?: number;
-}
-
-export default function Dice({ value }: DiceProps) {
+export default function Dice() {
+  const { lastDie, positions, current, rules } = useGameStore();
+  const endTurn = useGameStore((s) => s.endTurn);
   const muted = useGameStore((s) => s.muted);
   const rollSound = useRef<HTMLAudioElement | null>(null);
+  const [display, setDisplay] = useState<number>(0);
+  const [rolling, setRolling] = useState(false);
+
   useEffect(() => {
-    // Placeholder path; ensure roll.wav is added under public/assets/sounds.
     rollSound.current = new Audio('/assets/sounds/roll.wav');
   }, []);
-  if (typeof value === 'number') {
-    return (
-      <div className="w-12 h-12 border rounded flex items-center justify-center text-2xl bg-secondary text-white">
-        {faces[value - 1]}
-      </div>
-    );
-  }
 
-  const { lastDie, roll } = useGameStore();
+  useEffect(() => {
+    if (lastDie === 0) return;
+    if (!muted) rollSound.current?.play();
+    setRolling(true);
+    const interval = setInterval(() => {
+      setDisplay(Math.floor(Math.random() * 6) + 1);
+    }, 100);
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+      setDisplay(lastDie);
+      setRolling(false);
+      const remaining = rules.boardSize - 1 - positions[current];
+      if (lastDie - 1 > remaining) {
+        alert('Need exact roll to finish. Turn skipped.');
+        endTurn();
+      }
+    }, 3000);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [lastDie, positions, current, rules.boardSize, endTurn, muted]);
+
+  const face = display ? faces[display - 1] : '';
   return (
-    <button
-      className="w-12 h-12 border rounded flex items-center justify-center text-2xl bg-secondary text-white"
-      onClick={() => {
-        roll();
-        // Play sound effect when not muted
-        if (!muted) rollSound.current?.play();
-      }}
-      aria-label="Roll die"
-      title="Roll"
+    <div
+      className={`w-12 h-12 border rounded flex items-center justify-center text-2xl bg-secondary text-white ${rolling ? 'animate-spin' : ''}`}
     >
-      {lastDie ? faces[lastDie - 1] : 'Roll'}
-    </button>
+      {face}
+    </div>
   );
 }

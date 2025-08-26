@@ -57,6 +57,9 @@ export default function WordInput() {
       setUseWildcard(false);
       endTurn();
     }
+    if (res.reason === 'overshoot') {
+      alert('Word exceeds remaining squares. Turn skipped.');
+    }
   };
 
   const canUseWildcard = wildcards[current] > 0;
@@ -102,6 +105,17 @@ export default function WordInput() {
           aria-label="Submit word"
         >
           Submit
+        </button>
+        <button
+          type="button"
+          className="border px-2 rounded"
+          onClick={() => {
+            setWord('');
+            setUseWildcard(false);
+            endTurn();
+          }}
+        >
+          Concede
         </button>
         <button
           type="button"

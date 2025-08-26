@@ -78,7 +78,7 @@ export default function Board({ boardRef }: BoardProps) {
       return elements;
     }
 
-    // Ladder with rails and rungs
+    // Ladder with vertical rails and horizontal rungs
     const thickness = cellSize * 0.3;
     const stepCount = Math.max(2, Math.floor(length / cellSize));
     return (
@@ -88,19 +88,19 @@ export default function Board({ boardRef }: BoardProps) {
         style={{
           left: `${x}%`,
           top: `${y}%`,
-          width: `${length}%`,
-          height: `${thickness}%`,
-          transform: `translateY(-50%) rotate(${angle}deg)`,
-          transformOrigin: '0% 50%',
+          width: `${thickness}%`,
+          height: `${length}%`,
+          transform: `translateX(-50%) rotate(${angle}deg)`,
+          transformOrigin: '50% 0%',
         }}
       >
         <span
           className="absolute bg-yellow-500"
-          style={{ left: 0, top: 0, bottom: 0, width: '20%' }}
+          style={{ top: 0, bottom: 0, left: 0, width: '30%' }}
         />
         <span
           className="absolute bg-yellow-500"
-          style={{ right: 0, top: 0, bottom: 0, width: '20%' }}
+          style={{ top: 0, bottom: 0, right: 0, width: '30%' }}
         />
         {Array.from({ length: stepCount }).map((_, j) => (
           <span
