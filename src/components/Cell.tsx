@@ -12,7 +12,14 @@ interface CellProps {
   boardWidth: number;
 }
 
-export default function Cell({ index, positions, current, letter, mode, boardWidth }: CellProps) {
+export default function Cell({
+  index,
+  positions,
+  current,
+  letter,
+  mode,
+  boardWidth,
+}: CellProps) {
   const tokens: JSX.Element[] = [];
   const unit = 90 / boardWidth; // vmin per cell
   const isCurrent = index === positions[current];
@@ -73,7 +80,16 @@ export default function Cell({ index, positions, current, letter, mode, boardWid
       >
         {index + 1}
       </span>
-      <span style={{ fontSize: `${unit * 0.5}vmin` }}>{letter}</span>
+      {letter && (
+        <span
+          className="absolute inset-0 flex items-center justify-center z-10"
+          style={{ fontSize: `${unit * 0.5}vmin` }}
+        >
+          <span className="rounded bg-white/70 px-1 text-gray-800">
+            {letter}
+          </span>
+        </span>
+      )}
       {tokens}
     </div>
   );
