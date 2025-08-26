@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // Core game components
 import Board from './components/Board';
 import WordInput from './components/WordInput';
@@ -16,6 +16,8 @@ export default function App() {
   const [dictError, setDictError] = useState<string | null>(null);
   const [dictLoading, setDictLoading] = useState(true);
   const [showSetup, setShowSetup] = useState(true);
+  const [boardHeight, setBoardHeight] = useState(0);
+  const boardRef = useRef<HTMLDivElement>(null);
 
   // Loads dictionary data and stores it in state
   const loadDict = useCallback(() => {
@@ -39,6 +41,17 @@ export default function App() {
   useEffect(() => {
     void loadDict();
   }, [loadDict]);
+
+  // Track board size to sync side column heights
+  useEffect(() => {
+    if (!boardRef.current) return;
+    const ro = new ResizeObserver((entries) => {
+      const rect = entries[0].contentRect;
+      setBoardHeight(rect.height);
+    });
+    ro.observe(boardRef.current);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <div className="p-4 space-y-4 mx-auto">
@@ -79,11 +92,18 @@ export default function App() {
           ) : (
             <>
               <div className="flex gap-4 items-start justify-center">
-                <ModeSummary />
-                <Board />
-                <HUD />
+                <div
+                  className="flex flex-col justify-between"
+                  style={{ height: boardHeight }}
+                >
+                  <ModeSummary />
+                  <WordInput />
+                </div>
+                <Board boardRef={boardRef} />
+                <div style={{ height: boardHeight }}>
+                  <HUD />
+                </div>
               </div>
-              <WordInput />
             </>
           )}
         </>

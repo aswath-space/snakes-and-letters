@@ -8,10 +8,12 @@ interface CellProps {
   positions: Record<PlayerId, number>;
   letter?: string;
   mode: Rules['mode'];
+  boardWidth: number;
 }
 
-export default function Cell({ index, positions, letter, mode }: CellProps) {
+export default function Cell({ index, positions, letter, mode, boardWidth }: CellProps) {
   const tokens: JSX.Element[] = [];
+  const unit = 90 / boardWidth; // vmin per cell
 
   // Render player one token if on this cell
   if (positions[0] === index) {
@@ -21,7 +23,13 @@ export default function Cell({ index, positions, letter, mode }: CellProps) {
         key="p1"
         src="/assets/redpawn.svg"
         alt="P1"
-        className="absolute top-1 right-1 w-4 h-4"
+        className="absolute"
+        style={{
+          width: `${unit * 0.4}vmin`,
+          height: `${unit * 0.4}vmin`,
+          top: `${unit * 0.1}vmin`,
+          right: `${unit * 0.1}vmin`,
+        }}
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       />,
     );
@@ -35,7 +43,13 @@ export default function Cell({ index, positions, letter, mode }: CellProps) {
         key="p2"
         src="/assets/bluepawn.svg"
         alt="P2"
-        className="absolute bottom-1 right-1 w-4 h-4"
+        className="absolute"
+        style={{
+          width: `${unit * 0.4}vmin`,
+          height: `${unit * 0.4}vmin`,
+          bottom: `${unit * 0.1}vmin`,
+          right: `${unit * 0.1}vmin`,
+        }}
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       />,
     );
@@ -43,8 +57,17 @@ export default function Cell({ index, positions, letter, mode }: CellProps) {
 
   return (
     <div className="relative w-full aspect-square border flex items-center justify-center">
-      <span className="absolute top-1 left-1 text-[0.5rem]">{index + 1}</span>
-      <span className="text-[clamp(0.5rem,2vmin,1.25rem)]">{letter}</span>
+      <span
+        className="absolute"
+        style={{
+          top: `${unit * 0.1}vmin`,
+          left: `${unit * 0.1}vmin`,
+          fontSize: `${unit * 0.25}vmin`,
+        }}
+      >
+        {index + 1}
+      </span>
+      <span style={{ fontSize: `${unit * 0.5}vmin` }}>{letter}</span>
       {tokens}
     </div>
   );
