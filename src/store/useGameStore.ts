@@ -168,6 +168,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
     if (state.rules.mode === 'zen') {
       set({ requiredLength: 0, remainingTime: 0 });
+      get().roll();
       return;
     }
     const next = state.current === 0 ? 1 : 0;
