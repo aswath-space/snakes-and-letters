@@ -91,7 +91,7 @@ export default function App() {
             />
           ) : (
             <>
-              <div className="flex gap-4 items-start justify-center">
+              <div className="flex gap-2 items-start justify-center">
                 <div
                   className="flex flex-col justify-between"
                   style={{ height: boardHeight }}
