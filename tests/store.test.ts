@@ -38,6 +38,26 @@ describe('game store', () => {
     expect(useGameStore.getState().startLetter).toBe('e');
   });
 
+  it('next word starts on last letter of previous word', () => {
+    useGameStore.setState({ requiredLength: 5 });
+    useGameStore.getState().submitWord('apple');
+    useGameStore.setState({ requiredLength: 4 });
+    const res = useGameStore.getState().submitWord('evil');
+    expect(res.accepted).toBe(true);
+    const state = useGameStore.getState();
+    expect(state.positions[0]).toBe(14); // ladder from 7 to 14
+    expect(state.boardLetters.slice(0, 8)).toEqual([
+      'a',
+      'p',
+      'p',
+      'l',
+      'e',
+      'v',
+      'i',
+      'l',
+    ]);
+  });
+
   it('wildcard bypasses start letter and decrements', () => {
     useGameStore.setState({ requiredLength: 5, startLetter: 'b' });
     const res = useGameStore.getState().submitWord('apple', true);

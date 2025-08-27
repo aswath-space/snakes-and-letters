@@ -92,81 +92,83 @@ export default function WordInput() {
     <div className="p-4 bg-white rounded shadow space-y-2">
       {/* Use a form to centralize submit + Enter key handling */}
       <form
-        className="flex items-start space-x-2"
+        className="flex flex-col space-y-2"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
       >
-        <div className="flex-1">
-          <label htmlFor="word-input" className="sr-only">
-            Enter word
-          </label>
+        <label htmlFor="word-input" className="sr-only">
+          Enter word
+        </label>
+        <input
+          id="word-input"
+          type="text"
+          className="border p-1 rounded w-full"
+          value={word}
+          onChange={(e) => setWord(e.target.value)}
+          disabled={rolling}
+          aria-invalid={
+            !validation.accepted && requiredLength > 0 && word.length > 0
+          }
+          aria-describedby={!validation.accepted ? 'word-error' : undefined}
+        />
+
+        {/* Optionally bypass starting-letter rule */}
+        <label htmlFor="use-wildcard" className="flex items-center space-x-1">
           <input
-            id="word-input"
-            type="text"
-            className="border p-1 rounded w-full"
-            value={word}
-            onChange={(e) => setWord(e.target.value)}
-            disabled={rolling}
-            aria-invalid={!validation.accepted && requiredLength > 0 && word.length > 0}
-            aria-describedby={!validation.accepted ? 'word-error' : undefined}
+            id="use-wildcard"
+            type="checkbox"
+            checked={useWildcard}
+            disabled={!canUseWildcard || rolling}
+            onChange={() => setUseWildcard(!useWildcard)}
           />
-        </div>
+          <span>Wildcard</span>
+        </label>
 
-        <div className="flex flex-col space-y-2">
-          {/* Optionally bypass starting-letter rule */}
-          <label htmlFor="use-wildcard" className="flex items-center space-x-1">
-            <input
-              id="use-wildcard"
-              type="checkbox"
-              checked={useWildcard}
-              disabled={!canUseWildcard || rolling}
-              onChange={() => setUseWildcard(!useWildcard)}
-            />
-            <span>Wildcard</span>
-          </label>
+        <button
+          type="submit"
+          className="border px-2 bg-primary text-white rounded disabled:opacity-50"
+          disabled={!validation.accepted || rolling}
+          aria-label="Submit word"
+        >
+          Submit
+        </button>
 
-          <button
-            type="submit"
-            className="border px-2 bg-primary text-white rounded disabled:opacity-50"
-            disabled={!validation.accepted || rolling}
-            aria-label="Submit word"
-          >
-            Submit
-          </button>
+        <button
+          type="button"
+          className="border px-2 rounded disabled:opacity-50"
+          onClick={() => {
+            if (rolling) return;
+            setWord('');
+            setUseWildcard(false);
+            endTurn();
+            setHints([]);
+          }}
+          disabled={rolling}
+        >
+          Concede
+        </button>
 
-          <button
-            type="button"
-            className="border px-2 rounded disabled:opacity-50"
-            onClick={() => {
-              if (rolling) return;
-              setWord('');
-              setUseWildcard(false);
-              endTurn();
-              setHints([]);
-            }}
-            disabled={rolling}
-          >
-            Concede
-          </button>
-
-          <button
-            type="button"
-            className="border px-2 rounded disabled:opacity-50"
-            onClick={handleHint}
-            aria-label="Show hints"
-            disabled={rolling || requiredLength <= 0}
-          >
-            Hint
-          </button>
-        </div>
+        <button
+          type="button"
+          className="border px-2 rounded disabled:opacity-50"
+          onClick={handleHint}
+          aria-label="Show hints"
+          disabled={rolling || requiredLength <= 0}
+        >
+          Hint
+        </button>
       </form>
 
       {/* Inline validation feedback */}
       {!validation.accepted && requiredLength > 0 && word.length > 0 && (
-        <div id="word-error" className="text-sm text-red-500" aria-live="polite">
-          {reasonKey ? messages[reasonKey] ?? '' : ''}
+        <div
+          id="word-error"
+          className="text-sm text-red-500"
+          aria-live="polite"
+        >
+          {reasonKey ? (messages[reasonKey] ?? '') : ''}
         </div>
       )}
 
