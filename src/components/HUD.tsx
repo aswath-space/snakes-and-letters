@@ -30,7 +30,7 @@ export default function HUD() {
     }
   }, [rules.timer, requiredLength, remainingTime, endTurn]);
   return (
-    <div className="p-4 bg-white rounded shadow flex flex-col space-y-2 text-primary">
+    <div className="w-full p-4 bg-white rounded shadow flex flex-col space-y-2">
       <Dice />
       {/* Display current turn information */}
       <div>Required: {rolling ? '-' : requiredLength || '-'}</div>
