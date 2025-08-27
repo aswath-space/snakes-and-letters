@@ -11,6 +11,7 @@ export default function HUD() {
     current,
     rules,
     remainingTime,
+    rolling,
   } = useGameStore();
   const decrementTimer = useGameStore((s) => s.decrementTimer);
   const endTurn = useGameStore((s) => s.endTurn);
@@ -32,8 +33,8 @@ export default function HUD() {
     <div className="p-4 bg-white rounded shadow flex flex-col space-y-2 text-primary">
       <Dice />
       {/* Display current turn information */}
-      <div>Required: {requiredLength || '-'}</div>
-      <div>Start: {startLetter}</div>
+      <div>Required: {rolling ? '-' : requiredLength || '-'}</div>
+      <div>Start: {rolling ? '-' : startLetter}</div>
       <div>Current: {rules.mode === 'zen' ? 'P1' : `P${current + 1}`}</div>
       <div>Wildcards: {wildcards[current]}</div>
       {rules.timer && <div>Time: {remainingTime || '-'}</div>}

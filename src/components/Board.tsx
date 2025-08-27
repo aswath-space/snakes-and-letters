@@ -2,7 +2,7 @@
 import { useGameStore } from '../store/useGameStore';
 import Cell from './Cell';
 import { indexToPosition } from '../engine/board';
-import { LayoutGroup } from 'framer-motion';
+import { LayoutGroup, motion } from 'framer-motion';
 import type { Ref } from 'react';
 
 interface BoardProps {
@@ -197,6 +197,36 @@ export default function Board({ boardRef }: BoardProps) {
         >
           {cells}
         </div>
+        {positions[0] === -1 && (
+          <motion.img
+            layoutId="p1"
+            src="/assets/redpawn.svg"
+            alt="P1"
+            className="absolute"
+            style={{
+              width: `${cellSize * 0.4}%`,
+              height: `${cellSize * 0.4}%`,
+              bottom: `${cellSize * 0.1}%`,
+              left: `-${cellSize * 0.6}%`,
+            }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+          />
+        )}
+        {rules.mode !== 'zen' && positions[1] === -1 && (
+          <motion.img
+            layoutId="p2"
+            src="/assets/bluepawn.svg"
+            alt="P2"
+            className="absolute"
+            style={{
+              width: `${cellSize * 0.4}%`,
+              height: `${cellSize * 0.4}%`,
+              bottom: `${cellSize * 0.55}%`,
+              left: `-${cellSize * 0.6}%`,
+            }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+          />
+        )}
       </div>
     </LayoutGroup>
   );

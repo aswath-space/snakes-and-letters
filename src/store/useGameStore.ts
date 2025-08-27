@@ -28,6 +28,7 @@ interface GameState {
   usedWords: Set<string>;
   wildcards: Record<PlayerId, number>;
   requiredLength: number;
+  rolling: boolean;
   dictionary: Dictionary;
   boardLetters: string[];
   winner: PlayerId | null;
@@ -36,6 +37,7 @@ interface GameState {
   setDictionary(dict: Dictionary): void;
   newGame(rules?: Partial<Rules>): void;
   roll(): void;
+  finishRoll(): void;
   submitWord(
     word: string,
     useWildcard?: boolean,
@@ -54,6 +56,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   usedWords: new Set(),
   wildcards: { 0: 2, 1: 2 },
   requiredLength: 0,
+  rolling: false,
   dictionary: new Set(),
   boardLetters: Array(defaultRules.boardSize).fill(''),
   winner: null,
@@ -87,6 +90,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       boardLetters: Array(merged.boardSize).fill(''),
       winner: null,
       remainingTime: 0,
+      rolling: false,
     });
     get().roll();
   },
@@ -96,9 +100,14 @@ export const useGameStore = create<GameState>((set, get) => ({
     const die = rollDie();
     set({
       lastDie: die,
-      requiredLength: die,
+      requiredLength: 0,
+      rolling: true,
       remainingTime: get().rules.timer ? TURN_TIME : 0,
     });
+  },
+  finishRoll() {
+    if (!get().rolling) return;
+    set({ requiredLength: get().lastDie, rolling: false });
   },
   // Validate and apply a submitted word
   submitWord(word, useWildcard = false) {
@@ -176,6 +185,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ current: next, requiredLength: 0, remainingTime: 0 });
     if (state.rules.mode === 'bot' && next === 1) {
       get().roll();
+      get().finishRoll();
       const aiState = get();
       const word = chooseRandomWord({
         dictionary: aiState.dictionary,
