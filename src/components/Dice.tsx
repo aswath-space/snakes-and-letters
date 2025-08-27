@@ -8,6 +8,7 @@ export default function Dice() {
   const { lastDie, positions, current, rules } = useGameStore();
   const endTurn = useGameStore((s) => s.endTurn);
   const muted = useGameStore((s) => s.muted);
+  const finishRoll = useGameStore((s) => s.finishRoll);
   const rollSound = useRef<HTMLAudioElement | null>(null);
   const [display, setDisplay] = useState<number>(0);
   const [rolling, setRolling] = useState(false);
@@ -20,6 +21,7 @@ export default function Dice() {
     if (lastDie === 0) return;
     if (!muted) rollSound.current?.play();
     setRolling(true);
+    setDisplay(0);
     const interval = setInterval(() => {
       setDisplay(Math.floor(Math.random() * 6) + 1);
     }, 100);
@@ -27,6 +29,7 @@ export default function Dice() {
       clearInterval(interval);
       setDisplay(lastDie);
       setRolling(false);
+      finishRoll();
       const remaining = rules.boardSize - 1 - positions[current];
       if (lastDie - 1 > remaining) {
         alert('Need exact roll to finish. Turn skipped.');
@@ -37,7 +40,7 @@ export default function Dice() {
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [lastDie, positions, current, rules.boardSize, endTurn, muted]);
+  }, [lastDie, positions, current, rules.boardSize, endTurn, muted, finishRoll]);
 
   const face = display ? faces[display - 1] : '';
   return (

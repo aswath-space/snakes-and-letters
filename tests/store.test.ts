@@ -17,12 +17,17 @@ beforeEach(() => {
 });
 
 describe('game store', () => {
-  it('roll sets required length', () => {
+  it('roll sets required length after finish', () => {
     useGameStore.getState().roll();
-    const { lastDie, requiredLength } = useGameStore.getState();
-    expect(lastDie).toBeGreaterThanOrEqual(3);
-    expect(lastDie).toBeLessThanOrEqual(6);
-    expect(requiredLength).toBe(lastDie);
+    let state = useGameStore.getState();
+    expect(state.rolling).toBe(true);
+    expect(state.requiredLength).toBe(0);
+    useGameStore.getState().finishRoll();
+    state = useGameStore.getState();
+    expect(state.lastDie).toBeGreaterThanOrEqual(3);
+    expect(state.lastDie).toBeLessThanOrEqual(6);
+    expect(state.requiredLength).toBe(state.lastDie);
+    expect(state.rolling).toBe(false);
   });
 
   it('submit valid word moves player and updates start letter', () => {
