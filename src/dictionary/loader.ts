@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Keep the current public API shape for minimal churn.
 export type Dictionary = Set<string>;
 

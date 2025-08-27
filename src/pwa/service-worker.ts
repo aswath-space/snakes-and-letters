@@ -1,4 +1,6 @@
+/// <reference lib="webworker" />
 // Service worker implementing basic offline caching
+export {};
 declare const self: ServiceWorkerGlobalScope;
 
 const CACHE = 'snakes-letters-v1';

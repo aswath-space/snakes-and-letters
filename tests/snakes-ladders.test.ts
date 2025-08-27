@@ -10,6 +10,8 @@ const chainRules: Rules = {
   allowWildcards: true,
   challengeMode: false,
   noRepeats: false,
+  timer: false,
+  mode: 'multi',
 };
 
 const ladderRules: Rules = {
@@ -19,6 +21,8 @@ const ladderRules: Rules = {
   allowWildcards: true,
   challengeMode: false,
   noRepeats: false,
+  timer: false,
+  mode: 'multi',
 };
 
 describe('resolveSnakesAndLadders', () => {

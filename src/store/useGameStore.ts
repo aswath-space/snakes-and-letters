@@ -162,7 +162,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     const win = position === state.rules.boardSize - 1;
     set({
       positions: { ...state.positions, [state.current]: position },
-      startLetter: normalized.at(-1)!,
+      startLetter: normalized[normalized.length - 1]!,
       usedWords: newUsed,
       wildcards: newWildcards,
       boardLetters: letters,
