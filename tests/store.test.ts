@@ -119,14 +119,27 @@ describe('game store', () => {
     useGameStore.getState().newGame({ mode: 'bot' });
     useGameStore.setState({ dictionary: dict, startLetter: 'a' });
     const rollSpy = vi.spyOn(diceModule, 'rollDie').mockReturnValue(5);
-    const aiSpy = vi
-      .spyOn(aiModule, 'chooseRandomWord')
-      .mockReturnValue('apple');
+    const aiSpy = vi.spyOn(aiModule, 'chooseBotWord').mockReturnValue('apple');
     useGameStore.getState().endTurn();
     expect(aiSpy).toHaveBeenCalled();
     expect(useGameStore.getState().positions[1]).toBe(4);
     expect(useGameStore.getState().startLetter).toBe('e');
     expect(useGameStore.getState().current).toBe(0);
+    rollSpy.mockRestore();
+    aiSpy.mockRestore();
+  });
+
+  it('passes selected bot skill to chooseBotWord', () => {
+    useGameStore.getState().newGame({ mode: 'bot' });
+    useGameStore.setState({ dictionary: dict, startLetter: 'a' });
+    useGameStore.getState().setBot({ name: 'Cora', skill: 'hard' });
+    const rollSpy = vi.spyOn(diceModule, 'rollDie').mockReturnValue(5);
+    const aiSpy = vi.spyOn(aiModule, 'chooseBotWord').mockReturnValue('apple');
+    useGameStore.getState().endTurn();
+    expect(aiSpy).toHaveBeenCalledWith(
+      'hard',
+      expect.objectContaining({ length: 5 }),
+    );
     rollSpy.mockRestore();
     aiSpy.mockRestore();
   });

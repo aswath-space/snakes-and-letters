@@ -22,4 +22,5 @@ export const defaultRules: Rules = {
   noRepeats: false,
   timer: false,
   mode: 'multi',
+  bot: null,
 };

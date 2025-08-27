@@ -1,12 +1,14 @@
 import { useState } from 'react';
 
 // Options chosen in the setup screen
+type BotProfile = { name: string; skill: 'easy' | 'normal' | 'hard' };
 type SetupOptions = {
   boardSize: number;
   challengeMode: boolean;
   noRepeats: boolean;
   timer: boolean;
   mode: 'bot' | 'multi' | 'zen';
+  bot: BotProfile | null;
 };
 
 interface Props {
@@ -19,6 +21,12 @@ export default function GameSetupModal({ onStart }: Props) {
   const [noRepeats, setNoRepeats] = useState(false);
   const [timer, setTimer] = useState(false);
   const [mode, setMode] = useState<'bot' | 'multi' | 'zen'>('multi');
+  const bots: BotProfile[] = [
+    { name: 'Ava', skill: 'easy' },
+    { name: 'Blake', skill: 'normal' },
+    { name: 'Cora', skill: 'hard' },
+  ];
+  const [botIndex, setBotIndex] = useState(0);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50">
@@ -87,6 +95,23 @@ export default function GameSetupModal({ onStart }: Props) {
             Play vs Bot
           </label>
         </div>
+        {mode === 'bot' && (
+          <label className="block text-sm">
+            Opponent
+            <select
+              value={botIndex}
+              onChange={(e) => setBotIndex(Number(e.target.value))}
+              className="mt-1 w-full border p-1"
+            >
+              {bots.map((b, i) => (
+                <option
+                  key={b.name}
+                  value={i}
+                >{`${b.name} (${b.skill})`}</option>
+              ))}
+            </select>
+          </label>
+        )}
         {/* Start button initializes game with selected options */}
         <button
           type="button"
@@ -98,6 +123,7 @@ export default function GameSetupModal({ onStart }: Props) {
               noRepeats,
               timer,
               mode,
+              bot: mode === 'bot' ? bots[botIndex] : null,
             })
           }
         >
