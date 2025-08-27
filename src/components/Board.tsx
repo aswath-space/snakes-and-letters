@@ -13,6 +13,7 @@ export default function Board({ boardRef }: BoardProps) {
   const { positions, rules, boardLetters, current } = useGameStore();
   const width = Math.round(Math.sqrt(rules.boardSize));
   const cellSize = 100 / width;
+
   const cells: JSX.Element[] = [];
   // Build serpentine board layout
   for (let row = width - 1; row >= 0; row--) {
@@ -32,11 +33,17 @@ export default function Board({ boardRef }: BoardProps) {
     }
   }
 
+  // Deterministic hue for a given (from,to) pair to avoid flicker
+  const hueFromPair = (fromIdx: number, toIdx: number) => {
+    const hash = (fromIdx * 131 + toIdx * 17) % 360;
+    return (hash + 360) % 360;
+  };
+
   const decorations = useMemo(() => {
     const elems: JSX.Element[] = [];
-    const randHue = () => Math.floor(Math.random() * 360);
 
-    rules.snakes.forEach((s, i) => {
+    // Snakes
+    rules.snakes.forEach((s) => {
       const from = indexToPosition(s.from, rules.boardSize);
       const to = indexToPosition(s.to, rules.boardSize);
       const dx = (to.col - from.col) * cellSize;
@@ -49,20 +56,23 @@ export default function Board({ boardRef }: BoardProps) {
       const endX = x + dx;
       const endY = y + dy;
       const strokeWidth = cellSize * 0.15;
-      const hue = randHue();
+
+      const hue = hueFromPair(s.from, s.to);
       const light = `hsl(${hue} 70% 70%)`;
       const dark = `hsl(${hue} 70% 40%)`;
 
+      const key = `snake-${s.from}-${s.to}`;
+
       elems.push(
         <svg
-          key={`snake-${i}`}
+          key={key}
           className="absolute inset-0 pointer-events-none"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
           <defs>
             <linearGradient
-              id={`snake-gradient-${i}`}
+              id={`${key}-gradient`}
               gradientUnits="userSpaceOnUse"
               x1={startX}
               y1={startY}
@@ -73,7 +83,7 @@ export default function Board({ boardRef }: BoardProps) {
               <stop offset="100%" stopColor={dark} stopOpacity="0.6" />
             </linearGradient>
             <marker
-              id={`snake-head-${i}`}
+              id={`${key}-head`}
               markerWidth="4"
               markerHeight="4"
               refX="2"
@@ -83,7 +93,7 @@ export default function Board({ boardRef }: BoardProps) {
               <polygon points="0,0 4,2 0,4" fill={dark} fillOpacity="0.8" />
             </marker>
             <marker
-              id={`snake-tail-${i}`}
+              id={`${key}-tail`}
               markerWidth="4"
               markerHeight="4"
               refX="2"
@@ -98,17 +108,18 @@ export default function Board({ boardRef }: BoardProps) {
             y1={startY}
             x2={endX}
             y2={endY}
-            stroke={`url(#snake-gradient-${i})`}
+            stroke={`url(#${key}-gradient)`}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
-            markerStart={`url(#snake-tail-${i})`}
-            markerEnd={`url(#snake-head-${i})`}
+            markerStart={`url(#${key}-tail)`}
+            markerEnd={`url(#${key}-head)`}
           />
         </svg>,
       );
     });
 
-    rules.ladders.forEach((l, i) => {
+    // Ladders
+    rules.ladders.forEach((l) => {
       const from = indexToPosition(l.from, rules.boardSize);
       const to = indexToPosition(l.to, rules.boardSize);
       const dx = (to.col - from.col) * cellSize;
@@ -141,12 +152,13 @@ export default function Board({ boardRef }: BoardProps) {
       const r2ex = endX - px * (railSpacing / 2);
       const r2ey = endY - py * (railSpacing / 2);
 
-      const hue = randHue();
+      const hue = hueFromPair(l.from, l.to);
       const color = `hsl(${hue} 70% 50%)`;
+      const key = `ladder-${l.from}-${l.to}`;
 
       elems.push(
         <svg
-          key={`ladder-${i}`}
+          key={key}
           className="absolute inset-0 pointer-events-none"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
@@ -195,7 +207,7 @@ export default function Board({ boardRef }: BoardProps) {
     });
 
     return elems;
-  }, [rules.snakes, rules.ladders, cellSize, width, rules.boardSize]);
+  }, [rules.boardSize, cellSize, width, rules.snakes, rules.ladders]);
 
   return (
     <LayoutGroup>
@@ -212,6 +224,7 @@ export default function Board({ boardRef }: BoardProps) {
         >
           {cells}
         </div>
+
         {positions[0] === -1 && (
           <motion.img
             layoutId="p1"
