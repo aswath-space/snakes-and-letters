@@ -134,10 +134,15 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
       return validation;
     }
-    // Move forward by the full length of the accepted word. Players start
-    // off-board at index -1, so a five-letter word lands on cell 4
-    // (the board itself remains zero-indexed).
-    const move = normalized.length;
+    // Move forward placing the first letter on the current cell so the last
+    // letter of one word is the starting square for the next. Players start
+    // off-board at index -1, in which case the entire word determines the
+    // movement. Once on the board, only the trailing letters beyond the first
+    // advance the position.
+    const move =
+      state.positions[state.current] === -1
+        ? normalized.length
+        : normalized.length - 1;
     const remaining =
       state.rules.boardSize - 1 - state.positions[state.current];
     if (move > remaining) {
@@ -152,11 +157,12 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newWildcards = { ...state.wildcards };
     if (useWildcard) newWildcards[state.current]--;
     const letters = [...state.boardLetters];
-    // Place the letters along the path the player travelled, starting with
-    // the cell immediately after the starting position so the final letter
-    // lands on the destination cell.
+    // Place letters starting on the current cell so the first letter overlaps
+    // the previous word's last letter and the final letter lands on the
+    // destination cell.
+    const startIdx = Math.max(state.positions[state.current], 0);
     for (let i = 0; i < normalized.length; i++) {
-      const idx = state.positions[state.current] + i + 1;
+      const idx = startIdx + i;
       if (idx < letters.length) letters[idx] = normalized[i];
     }
     const win = position === state.rules.boardSize - 1;
