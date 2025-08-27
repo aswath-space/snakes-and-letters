@@ -4,6 +4,7 @@ import Board from './components/Board';
 import WordInput from './components/WordInput';
 import HUD from './components/HUD';
 import ModeSummary from './components/ModeSummary';
+import PlayerPanel from './components/PlayerPanel';
 // Helper utilities and state store
 import { loadWordlist } from './dictionary/loader';
 import { useGameStore } from './store/useGameStore';
@@ -97,11 +98,14 @@ export default function App() {
                   style={{ height: boardHeight }}
                 >
                   <ModeSummary />
-                  <WordInput />
+                  <div className="flex flex-col space-y-2">
+                    <HUD />
+                    <WordInput />
+                  </div>
                 </div>
                 <Board boardRef={boardRef} />
                 <div style={{ height: boardHeight }}>
-                  <HUD />
+                  <PlayerPanel />
                 </div>
               </div>
             </>
