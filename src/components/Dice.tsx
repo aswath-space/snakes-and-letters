@@ -21,6 +21,7 @@ export default function Dice() {
     if (lastDie === 0) return;
     if (!muted) rollSound.current?.play();
     setRolling(true);
+    setDisplay(0);
     const interval = setInterval(() => {
       setDisplay(Math.floor(Math.random() * 6) + 1);
     }, 100);
@@ -39,7 +40,7 @@ export default function Dice() {
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [lastDie, positions, current, rules.boardSize, endTurn, muted]);
+  }, [lastDie, positions, current, rules.boardSize, endTurn, muted, finishRoll]);
 
   const face = display ? faces[display - 1] : '';
   return (
