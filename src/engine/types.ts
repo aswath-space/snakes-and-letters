@@ -17,4 +17,5 @@ export interface Rules {
   noRepeats: boolean;
   timer: boolean;
   mode: 'bot' | 'multi' | 'zen';
+  bot: { name: string; skill: 'easy' | 'normal' | 'hard' } | null;
 }

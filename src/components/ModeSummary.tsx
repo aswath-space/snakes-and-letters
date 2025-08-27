@@ -10,7 +10,9 @@ export default function ModeSummary() {
       <div>{rules.noRepeats ? 'No Repeats' : 'Repeats Allowed'}</div>
       {/* Conditionally show extra mode indicators */}
       {rules.timer && <div>Timer Enabled</div>}
-      {rules.mode === 'bot' && <div>Vs Bot</div>}
+      {rules.mode === 'bot' && rules.bot && (
+        <div>{`Vs ${rules.bot.name} (${rules.bot.skill})`}</div>
+      )}
       {rules.mode === 'zen' && <div>Zen Mode</div>}
     </div>
   );

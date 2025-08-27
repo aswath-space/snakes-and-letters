@@ -10,7 +10,7 @@ import {
 } from '../engine';
 import { rollDie } from '../engine/dice';
 import { validateWord, normalize } from '../engine/validate';
-import { chooseRandomWord } from '../engine/ai';
+import { chooseBotWord } from '../engine/ai';
 import { hasWord } from '../dictionary/loader';
 import type { Dictionary } from '../dictionary/loader';
 
@@ -45,6 +45,7 @@ interface GameState {
   endTurn(): void;
   muted: boolean;
   toggleMute(): void;
+  setBot(profile: { name: string; skill: 'easy' | 'normal' | 'hard' }): void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -68,6 +69,11 @@ export const useGameStore = create<GameState>((set, get) => ({
   // Start a new game optionally overriding rules
   newGame(rules) {
     const merged: Rules = { ...defaultRules, ...rules };
+    if (merged.mode === 'bot') {
+      merged.bot = merged.bot ?? { name: 'Ava', skill: 'easy' };
+    } else {
+      merged.bot = null;
+    }
     if (
       rules?.boardSize &&
       rules.boardSize !== defaultRules.boardSize &&
@@ -193,7 +199,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       get().roll();
       get().finishRoll();
       const aiState = get();
-      const word = chooseRandomWord({
+      const word = chooseBotWord(aiState.rules.bot!.skill, {
         dictionary: aiState.dictionary,
         length: aiState.requiredLength,
         startLetter: aiState.startLetter,
@@ -216,5 +222,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   // Toggle sound effects on/off
   toggleMute() {
     set((s) => ({ muted: !s.muted }));
+  },
+  setBot(profile) {
+    set((s) => ({ rules: { ...s.rules, bot: profile } }));
   },
 }));
